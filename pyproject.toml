@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "climate-dashboard"
+version = "0.1.0"
+description = ""
+authors = ["Jovinder Singh <jovinder@yahoo.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+streamlit = "^1.37.1"
+pyyaml = "^6.0.2"
+ruff = "^0.5.7"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
