@@ -1,7 +1,7 @@
 IMAGES_URL:
   Warming stripes for 1850-2018 using the WMO annual global temperature dataset: https://bpb-eu-w2.wpmucdn.com/blogs.reading.ac.uk/dist/3/187/files/2018/12/wmo_stripes.png
-  Climate spiral for the WMO global temperature dataset: https://bpb-eu-w2.wpmucdn.com/blogs.reading.ac.uk/dist/3/187/files/2018/12/spiral_2018_WMO_large.gif
-  Arctic sea ice concentration from NSIDC for Septembers during 1979-2018: https://bpb-eu-w2.wpmucdn.com/blogs.reading.ac.uk/dist/3/187/files/2018/12/maparctic_sept_large.gif
+  Climate spiral for the WMO global temperature dataset: ./assets/spiral_2018_WMO_large.gif
+  Arctic sea ice concentration from NSIDC for Septembers during 1979-2018: ./assets/maparctic_sept_large.gif
   Earth’s Hottest Day on Record: https://www.nasa.gov/wp-content/uploads/2024/07/merra2-geos-fp-daily-record.png
   Carbon Dioxide MEASUREMENT June 2024: ./assets/CO2.png
   Global Temperature 2023: ./assets/GlobalTemp.png

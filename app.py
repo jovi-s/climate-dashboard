@@ -24,7 +24,7 @@ with st.container():
         climate_spiral = "Climate spiral for the WMO global temperature dataset"
         st.markdown(climate_spiral)
         st.image(
-            display_image_from_url(config["IMAGES_URL"][climate_spiral]),
+            config["IMAGES_URL"][climate_spiral],
             use_column_width=True,
         )
 
@@ -34,7 +34,7 @@ with st.container():
         )
         st.markdown(arctic_sea_ice)
         st.image(
-            display_image_from_url(config["IMAGES_URL"][arctic_sea_ice]),
+            config["IMAGES_URL"][arctic_sea_ice],
             use_column_width=True,
         )
 
