@@ -9,65 +9,32 @@ with open("./src/config.yaml", "r") as file:
 
 st.title("Severe Climate Data Visualizations")
 
-# Create containers to display the images and gifs
-with st.container():
-    col1, col2, col3 = st.columns(3)
+global_tab, regional_tab, local_tab = st.tabs(["Global", "Regional", "Local"])
 
-    with col1:
-        wmo = "Warming stripes for 1850-2018 using the WMO annual global temperature dataset"
-        st.markdown(wmo)
-        st.image(
-            display_image_from_url(config["IMAGES_URL"][wmo]), use_column_width=True
-        )
+# Function to display an image with a description
+def display_image_with_description(description, image_url):
+    st.markdown(description)
+    st.image(image_url, use_column_width=True)
 
-    with col2:
-        climate_spiral = "Climate spiral for the WMO global temperature dataset"
-        st.markdown(climate_spiral)
-        st.image(
-            config["IMAGES_URL"][climate_spiral],
-            use_column_width=True,
-        )
+# Global Tab Content
+with global_tab:
+    descriptions_and_images = [
+        ("Warming stripes for 1850-2018 using the WMO annual global temperature dataset", config["IMAGES_URL"]["Warming stripes for 1850-2018 using the WMO annual global temperature dataset"]),
+        ("Climate spiral for the WMO global temperature dataset", config["IMAGES_URL"]["Climate spiral for the WMO global temperature dataset"]),
+        ("Arctic sea ice concentration from NSIDC for Septembers during 1979-2018", config["IMAGES_URL"]["Arctic sea ice concentration from NSIDC for Septembers during 1979-2018"]),
+        ("Earth’s Hottest Day on Record", config["IMAGES_URL"]["Earth’s Hottest Day on Record"]),
+        ("Carbon Dioxide MEASUREMENT June 2024", config["IMAGES_URL"]["Carbon Dioxide MEASUREMENT June 2024"]),
+        ("Global Temperature 2023", config["IMAGES_URL"]["Global Temperature 2023"]),
+        ("Sea Level SATELLITE DATA 1993-June 2024", config["IMAGES_URL"]["Sea Level SATELLITE DATA 1993-June 2024"]),
+        ("Ocean Warming HEAT CONTENT CHANGES SINCE 1955-December 2023 (NOAA)", config["IMAGES_URL"]["Ocean Warming HEAT CONTENT CHANGES SINCE 1955-December 2023 (NOAA)"])
+    ]
 
-    with col3:
-        arctic_sea_ice = (
-            "Arctic sea ice concentration from NSIDC for Septembers during 1979-2018"
-        )
-        st.markdown(arctic_sea_ice)
-        st.image(
-            config["IMAGES_URL"][arctic_sea_ice],
-            use_column_width=True,
-        )
-
-with st.container():
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        hottest_day = "Earth’s Hottest Day on Record"
-        st.markdown(hottest_day)
-        # Display the image from the url
-        st.image(config["IMAGES_URL"][hottest_day], use_column_width=True)
-
-    with col2:
-        climate_spiral = "Carbon Dioxide MEASUREMENT June 2024"
-        st.markdown(climate_spiral)
-        st.image(config["IMAGES_URL"][climate_spiral], use_column_width=True)
-
-    with col3:
-        arctic_sea_ice = "Global Temperature 2023"
-        st.markdown(arctic_sea_ice)
-        st.image(config["IMAGES_URL"][arctic_sea_ice], use_column_width=True)
-
-with st.container():
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        sea_level = "Sea Level SATELLITE DATA 1993-June 2024"
-        st.markdown(sea_level)
-        st.image(config["IMAGES_URL"][sea_level], use_column_width=True)
-
-    with col2:
-        ocean_warming = (
-            "Ocean Warming HEAT CONTENT CHANGES SINCE 1955-December 2023 (NOAA)"
-        )
-        st.markdown(ocean_warming)
-        st.image(config["IMAGES_URL"][ocean_warming], use_column_width=True)
+    # Display images in groups of 3
+    for i in range(0, len(descriptions_and_images), 3):
+        with st.container():
+            cols = st.columns(3)
+            for j, col in enumerate(cols):
+                if i + j < len(descriptions_and_images):
+                    with col:
+                        description, image_url = descriptions_and_images[i + j]
+                        display_image_with_description(description, image_url)
