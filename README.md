@@ -12,8 +12,9 @@ View climate change statistics around your location.
 
 ## Resources
 
-- https://www.climate-lab-book.ac.uk/2018/2018-visualisation-update/
-
-- https://climate.nasa.gov/vital-signs
-
-- https://jjk-code-otter.github.io/dashboard-dashboard/
+- <https://www.climate-lab-book.ac.uk/2018/2018-visualisation-update/>
+- <https://climate.nasa.gov/vital-signs>
+- <https://jjk-code-otter.github.io/dashboard-dashboard/>
+- <https://rieee.appstate.edu/projects-programs/cdiac/>
+- <https://www.climatecentral.org/resources?type=Graphic&tab=graphics>
+- <https://www.ipcc.ch/report/ar6/syr/figures/>

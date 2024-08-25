@@ -1,10 +1,41 @@
-IMAGES_URL:
-  Warming stripes for 1850-2018 using the WMO annual global temperature dataset: https://bpb-eu-w2.wpmucdn.com/blogs.reading.ac.uk/dist/3/187/files/2018/12/wmo_stripes.png
-  Climate spiral for the WMO global temperature dataset: ./assets/spiral_2018_WMO_large.gif
-  Arctic sea ice concentration from NSIDC for Septembers during 1979-2018: ./assets/maparctic_sept_large.gif
-  Earth’s Hottest Day on Record: https://www.nasa.gov/wp-content/uploads/2024/07/merra2-geos-fp-daily-record.png
-  Carbon Dioxide MEASUREMENT June 2024: ./assets/CO2.png
-  Global Temperature 2023: ./assets/GlobalTemp.png
-  Sea Level SATELLITE DATA 1993-June 2024: ./assets/SeaLevel.png
-  Ocean Warming HEAT CONTENT CHANGES SINCE 1955-December 2023 (NOAA): ./assets/ocean_heat.png
+IMAGES_LINKS:
+  Earth’s Hottest Day on Record: 
+    URL: https://www.nasa.gov/wp-content/uploads/2024/07/merra2-geos-fp-daily-record.png
+    Data source: NASA's Modern-Era Retrospective analysis for Research and Applications, Version 2 (MERRA-2)
+  Intensification of Adverse Impacts: 
+    URL: https://www.ipcc.ch/report/ar6/syr/downloads/figures/IPCC_AR6_SYR_SPM_Figure1.png
+    Data source: IPCC AR6 Synthesis Report Figure SPM.1
 
+IMAGES_URL:
+  Top 10 Hottest Years:
+    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Top10_en_title_lg.jpg
+    Data source: NASA GISS & NOAA NCEI
+  Change in Global Temperature 2023:
+    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Anomalies_en_title_lg.jpg
+    Data source: NASA GISS & NOAA NCEI
+  2023 Global Warming Stripes:
+    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Stripes_en_title_lg.jpg
+    Data source: NASA GISS & NOAA NCEI
+  # Warming stripes for 1850-2018 using the WMO annual global temperature dataset:
+  #   URL: https://bpb-eu-w2.wpmucdn.com/blogs.reading.ac.uk/dist/3/187/files/2018/12/wmo_stripes.png
+  #   Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
+  Climate spiral for the 2018 WMO global temperature dataset:
+    URL: ./assets/spiral_2018_WMO_large.gif
+    Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
+  Arctic sea ice concentration from NSIDC for Septembers during 1979-2018:
+    URL: ./assets/maparctic_sept_large.gif
+    Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
+
+IMAGES_DATA:
+  Carbon Dioxide (PPM): 
+    URL: https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.txt
+    Data source: NOAA, measured at the Mauna Loa Observatory
+  Atmospheric Methane (PPB): 
+    URL: https://gml.noaa.gov/webdata/ccgg/trends/ch4/ch4_mm_gl.txt
+    Data source: Data from NOAA, measured from a global network of air sampling sites
+  Global Temperature Anomaly (C): 
+    URL: https://data.giss.nasa.gov/gistemp/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt
+    Data source: NASA's Goddard Institute for Space Studies (GISS). Credit- NASA/GISS
+  World Ocean Warming (C):
+    URL: https://www.ncei.noaa.gov/data/oceans/woa/DATA_ANALYSIS/3M_HEAT_CONTENT/DATA/basin/pentad/pent_h22-w0-2000m.dat
+    Data source: Observations from various ocean measurement devices, including conductivity-temperature-depth instruments (CTDs), Argo profiling floats, and eXpendable BathyThermographs (XBTs). Credit- NOAA/NCEI World Ocean Database

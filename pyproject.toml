@@ -10,7 +10,11 @@ python = "^3.12"
 streamlit = "^1.37.1"
 pyyaml = "^6.0.2"
 ruff = "^0.5.7"
+matplotlib = "^3.9.2"
 
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.5"
 
 [build-system]
 requires = ["poetry-core"]
