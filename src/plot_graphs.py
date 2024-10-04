@@ -1,7 +1,8 @@
-import requests
-import pandas as pd
-import matplotlib.pyplot as plt
+import ast
 
+import matplotlib.pyplot as plt
+import pandas as pd
+import requests
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
@@ -152,6 +153,32 @@ def plot_world_ocean_warming(text):
     plt.title("World Ocean Warming Over Time")
     plt.xlabel("Year")
     plt.ylabel("Temperature Anomaly (°C)")
+    plt.grid(True)
+    plt.legend()
+
+    return plt
+
+
+def plot_world_ocean_warming_1992(text):
+    data = ast.literal_eval(text)
+    # Convert the dictionary into a DataFrame
+    df = pd.DataFrame(data.items(), columns=["Date", "Temperature"])
+
+    # Convert 'Date' column to datetime format
+    df["Date"] = pd.to_datetime(df["Date"])
+
+    # Plotting World Ocean Warming
+    plt.figure(figsize=(10, 5))
+    plt.plot(
+        df["Date"],
+        df["Temperature"],
+        label="World Ocean Temperature",
+        marker="o",
+        color="blue",
+    )
+    plt.title("World Ocean Warming Over Time")
+    plt.xlabel("Date")
+    plt.ylabel("Ocean Heat Content (Zettajoules)")
     plt.grid(True)
     plt.legend()
 

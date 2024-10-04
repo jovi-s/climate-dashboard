@@ -37,5 +37,19 @@ IMAGES_DATA:
     URL: https://data.giss.nasa.gov/gistemp/graphs/graph_data/Global_Mean_Estimates_based_on_Land_and_Ocean_Data/graph.txt
     Data source: NASA's Goddard Institute for Space Studies (GISS). Credit- NASA/GISS
   World Ocean Warming (C):
-    URL: https://www.ncei.noaa.gov/data/oceans/woa/DATA_ANALYSIS/3M_HEAT_CONTENT/DATA/basin/pentad/pent_h22-w0-2000m.dat
-    Data source: Observations from various ocean measurement devices, including conductivity-temperature-depth instruments (CTDs), Argo profiling floats, and eXpendable BathyThermographs (XBTs). Credit- NOAA/NCEI World Ocean Database
+    URL: https://climate.nasa.gov/internal_resources/2745/ECCO_V4r5_ext_to_20230615_OHC_ZJ_YYYY-MM_anom.json
+    Data source: Observations from satellites and various ocean measurement devices, including conductivity-temperature-depth instruments (CTDs), Argo profiling floats, eXpendable BathyThermographs (XBTs), instrumented mooring arrays, and ice-tethered profilers (ITPs). Credit- NASA ECCO
+
+
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2407%20July%20CB/PR/Monthly%20global%20temperature%20anomalies%20since%201940.csv
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2407%20July%20CB/PR/Daily%20global%20surface%20air%20temperature.csv
+
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2405%20CB/PR/timeseries_era5_sst_60S-60N_daily_1979-2024.csv
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/June%20CB/temp/timeseries-global-surface-air-temperature-anomalies-june-ref1991%E2%80%932020.txt
+
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2405%20CB/PR/timeseries_era5_sst_60S-60N_daily_1979-2024.csv
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2405%20CB/PR/timeseries_era5_monthly_2t_global_allmonths.csv
+
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2404%20CB/timeseries_era5_monthly_global_surface_temperature_anomalies_1940-2024_allmonths.csv
+# https://climate.copernicus.eu/sites/default/files/custom-uploads/2404%20CB/timeseries_era5_daily_sst_60S-60N_1979-2024.csv
+
