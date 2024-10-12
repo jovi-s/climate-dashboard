@@ -1,31 +1,3 @@
-IMAGES_LINKS:
-  Earth’s Hottest Day on Record: 
-    URL: https://www.nasa.gov/wp-content/uploads/2024/07/merra2-geos-fp-daily-record.png
-    Data source: NASA's Modern-Era Retrospective analysis for Research and Applications, Version 2 (MERRA-2)
-  Intensification of Adverse Impacts: 
-    URL: https://www.ipcc.ch/report/ar6/syr/downloads/figures/IPCC_AR6_SYR_SPM_Figure1.png
-    Data source: IPCC AR6 Synthesis Report Figure SPM.1
-
-IMAGES_URL:
-  Top 10 Hottest Years:
-    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Top10_en_title_lg.jpg
-    Data source: NASA GISS & NOAA NCEI
-  Change in Global Temperature 2023:
-    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Anomalies_en_title_lg.jpg
-    Data source: NASA GISS & NOAA NCEI
-  2023 Global Warming Stripes:
-    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Stripes_en_title_lg.jpg
-    Data source: NASA GISS & NOAA NCEI
-  # Warming stripes for 1850-2018 using the WMO annual global temperature dataset:
-  #   URL: https://bpb-eu-w2.wpmucdn.com/blogs.reading.ac.uk/dist/3/187/files/2018/12/wmo_stripes.png
-  #   Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
-  Climate spiral for the 2018 WMO global temperature dataset:
-    URL: ./assets/spiral_2018_WMO_large.gif
-    Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
-  Arctic sea ice concentration from NSIDC for Septembers during 1979-2018:
-    URL: ./assets/maparctic_sept_large.gif
-    Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
-
 IMAGES_DATA:
   Carbon Dioxide (PPM): 
     URL: https://gml.noaa.gov/webdata/ccgg/trends/co2/co2_mm_mlo.txt
@@ -40,16 +12,43 @@ IMAGES_DATA:
     URL: https://climate.nasa.gov/internal_resources/2745/ECCO_V4r5_ext_to_20230615_OHC_ZJ_YYYY-MM_anom.json
     Data source: Observations from satellites and various ocean measurement devices, including conductivity-temperature-depth instruments (CTDs), Argo profiling floats, eXpendable BathyThermographs (XBTs), instrumented mooring arrays, and ice-tethered profilers (ITPs). Credit- NASA ECCO
 
+IMAGES_LINKS:
+  Earth’s Hottest Day on Record: 
+    URL: https://www.nasa.gov/wp-content/uploads/2024/07/merra2-geos-fp-daily-record.png
+    Data source: NASA's Modern-Era Retrospective analysis for Research and Applications, Version 2 (MERRA-2)
+  Intensification of Adverse Impacts: 
+    URL: https://www.ipcc.ch/report/ar6/syr/downloads/figures/IPCC_AR6_SYR_SPM_Figure1.png
+    Data source: IPCC AR6 Synthesis Report Figure SPM.1
 
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2407%20July%20CB/PR/Monthly%20global%20temperature%20anomalies%20since%201940.csv
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2407%20July%20CB/PR/Daily%20global%20surface%20air%20temperature.csv
+IMAGES_URL:
+  Climate Spiral:
+    # https://svs.gsfc.nasa.gov/5383/
+    URL: ./assets/GISTEMP_Spiral_SR_5.gif
+    Data source: GISS Surface Temperature Analysis (GISTEMP), NASA/GISS
+  Emissions Gap:
+    URL: https://climateactiontracker.org/media/images/CAT_2023-12_Graph_EmissionsGaps2030.original.png
+    Data source: Climate Action Tracker (2023). 2030 Emissions Gap- CAT projections and resulting emissions gap in meeting the 1.5°C Paris Agreement goal. December 2023.
+  Future Projections:
+    URL: https://climateactiontracker.org/media/images/CAT_2023-12_Graph_2100WarmingProjection.original.png
+    Data source: Climate Action Tracker (2023). 2100 Warming Projections- Emissions and expected warming based on pledges and current policies. December 2023.
 
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2405%20CB/PR/timeseries_era5_sst_60S-60N_daily_1979-2024.csv
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/June%20CB/temp/timeseries-global-surface-air-temperature-anomalies-june-ref1991%E2%80%932020.txt
+  2023 Global Warming Stripes:
+    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Stripes_en_title_lg.jpg
+    Data source: NASA GISS & NOAA NCEI
+  Top 10 Hottest Years:
+    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Top10_en_title_lg.jpg
+    Data source: NASA GISS & NOAA NCEI
+  Change in Global Temperature 2023:
+    URL: https://images.climatecentral.org/2024GlobalTemps/2024GlobalTemps_Anomalies_en_title_lg.jpg
+    Data source: NASA GISS & NOAA NCEI
 
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2405%20CB/PR/timeseries_era5_sst_60S-60N_daily_1979-2024.csv
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2405%20CB/PR/timeseries_era5_monthly_2t_global_allmonths.csv
+  Arctic sea ice minimum extent on September 11, 2024:
+    URL: https://www.nasa.gov/wp-content/uploads/2024/09/sea-ice-2024-min-2160p60-2608-print.jpg
+    Data source: NASA’s Scientific Visualization Studio
+  # Arctic sea ice concentration from NSIDC for Septembers during 1979-2018:
+  #   URL: ./assets/maparctic_sept_large.gif
+  #   Data source: State of the Climate report 2018, World Meteorological Organization (WMO)
 
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2404%20CB/timeseries_era5_monthly_global_surface_temperature_anomalies_1940-2024_allmonths.csv
-# https://climate.copernicus.eu/sites/default/files/custom-uploads/2404%20CB/timeseries_era5_daily_sst_60S-60N_1979-2024.csv
-
+  Climate tipping points in Earth’s climate system:
+    URL: https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2023/12/climate_tipping_points_in_earth_s_climate_system/25352057-1-eng-GB/Climate_tipping_points_in_Earth_s_climate_system.jpg
+    Data source: European Space Agency (ESA)

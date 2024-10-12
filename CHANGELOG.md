@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Options are: Added, Changed, Removed, Fixed.
 
+## [0.0.3] - 2024-10-12
+
+### Added
+
+- Fix the issue with the Ocean Warming Graph Not Loading
+- AI summary and comaparison for NDCs.
+- Streamlit cache for resources and data
+- Update images
+- Add earth tipping points image
+
+### Fixed
+
+- Climate spiral gif
+
+### Changed
+
+- Update climate central images for climate stripes
+
+### Removed
+
+- Regional Tab
+
 ## [0.0.2] - 2024-10-05
 
 ### Added

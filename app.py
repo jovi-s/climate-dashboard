@@ -1,6 +1,7 @@
 import streamlit as st
 import yaml
 
+from src.ndc_inference import multi_document_agents
 from src.plot_graphs import (
     fetch_data,
     global_temperature_anomaly,
@@ -8,9 +9,11 @@ from src.plot_graphs import (
     plot_methane_data,
     plot_world_ocean_warming_1992,
 )
-from src.utils import countries_list
-
-# import earthkit.maps
+from src.utils import (
+    climate_action_tracker_countries,
+    countries_list,
+    fetch_and_extract_href,
+)
 
 
 # Function to load CSS from an external file
@@ -25,9 +28,18 @@ load_css("./assets/styles.css")
 with open("./src/config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
+
+state = st.session_state
+if "ndc_comparison" not in state:
+    state.ndc_comparison = []
+
 st.title("A Climate in Crisis")
-global_tab, regional_tab, local_tab, ndc_tab, ncqg_tab, action_tab = st.tabs(
-    ["Global", "Regional", "Local", "NDCs", "NCQG", "Take Action!"]
+st.text("This app is in active development.")
+
+# Tabs
+# Add 'Regional' in future iterations
+global_tab, local_tab, ndc_tab, ncqg_tab, action_tab = st.tabs(
+    ["Global", "Local", "NDCs", "NCQG", "Take Action!"]
 )
 
 
@@ -39,12 +51,26 @@ def display_image_with_description(description, image_url):
 
 # Global Tab Content
 with global_tab:
+
+    @st.cache_data
+    def fetch_global_data():
+        co2_data = fetch_data(config["IMAGES_DATA"]["Carbon Dioxide (PPM)"]["URL"])
+        methane_data = fetch_data(
+            config["IMAGES_DATA"]["Atmospheric Methane (PPB)"]["URL"]
+        )
+        temp_data = fetch_data(
+            config["IMAGES_DATA"]["Global Temperature Anomaly (C)"]["URL"]
+        )
+        ocean_data = fetch_data(config["IMAGES_DATA"]["World Ocean Warming (C)"]["URL"])
+        return co2_data, methane_data, temp_data, ocean_data
+
+    co2_data, methane_data, temp_data, ocean_data = fetch_global_data()
+
     # This containter pull latest data from txt files and plot the data
     with st.container():
         col1, col2 = st.columns(2)
         with col1:
             # Plot and display CO2 data
-            co2_data = fetch_data(config["IMAGES_DATA"]["Carbon Dioxide (PPM)"]["URL"])
             co2_plot = plot_co2_data(co2_data)
             st.pyplot(co2_plot)
             st.markdown(
@@ -53,9 +79,6 @@ with global_tab:
             )
         with col2:
             # Plot and display Methane data
-            methane_data = fetch_data(
-                config["IMAGES_DATA"]["Atmospheric Methane (PPB)"]["URL"]
-            )
             methane_plot = plot_methane_data(methane_data)
             st.pyplot(methane_plot)
             st.markdown(
@@ -67,9 +90,6 @@ with global_tab:
         col1, col2 = st.columns(2)
         with col1:
             # Plot and display Global Temperature Anomaly data
-            temp_data = fetch_data(
-                config["IMAGES_DATA"]["Global Temperature Anomaly (C)"]["URL"]
-            )
             temp_plot = global_temperature_anomaly(temp_data)
             st.pyplot(temp_plot)
             st.markdown(
@@ -78,9 +98,6 @@ with global_tab:
             )
         with col2:
             # Plot and display Global Ocean Warming data
-            ocean_data = fetch_data(
-                config["IMAGES_DATA"]["World Ocean Warming (C)"]["URL"]
-            )
             ocean_plot = plot_world_ocean_warming_1992(ocean_data)
             st.pyplot(ocean_plot)
             st.markdown(
@@ -145,79 +162,105 @@ with global_tab:
                             unsafe_allow_html=True,
                         )
 
+    st.divider()
+    st.markdown("Built with ❤️ by [Jovi](https://www.linkedin.com/in/jovindersingh/)")
 
-with regional_tab:
-    st.subheader("REGIONAL INFORMATION UNDER DEVELOPMENT")
-    # with st.container():
-    #     col1, col2 = st.columns(2)
-    #     data = ek.data.from_source(
-    #             'cds',
-    #             'reanalysis-era5-single-levels',
-    #             {
-    #                 'product_type': 'reanalysis',
-    #                 'variable': '2m_temperature',
-    #                 'year': '2023',
-    #                 'month': '07',
-    #                 'day': '3',
-    #                 'time': '12:00',
-    #             },
-    #         )
-    #     with col1:
-    #         st.image(ek.plots.globe(data))
-    #     with col2:
-    #         st.image(ek.maps.quickplot(data))
 
-    # chart = ek.maps.Chart(rows=2, columns=3)
+# with regional_tab:
+#     st.subheader("REGIONAL INFORMATION UNDER DEVELOPMENT")
 
-    # for domain in [
-    #         "South East Asia",
-    #         "Asia",
-    # ]:
-    #     chart.add_subplot(domain=domain)
-
-    # chart.stock_img()
-    # chart.coastlines()
-    # chart.borders()
-    # chart.gridlines()
-
-    # chart.subplot_titles("{domain}")
-
-    # st.image(chart)
 
 with local_tab:
-    st.subheader("LOCAL INFORMATION UNDER DEVELOPMENT")
+    st.markdown("This section provides a summary from Climate Action Tracker.")
+    selected_local_country = st.selectbox(
+        "Select a country", climate_action_tracker_countries, placeholder="singapore"
+    )
+    BASE_URL = "https://climateactiontracker.org/countries/"
+    local_country_url = BASE_URL + selected_local_country + "/"
+    absolute_href = fetch_and_extract_href(local_country_url)
+    st.image(absolute_href, use_column_width=True)
+    st.markdown(
+        f"For more information, visit [Climate Action Tracker]({local_country_url})"
+    )
 
-    # chart = ek.maps.Chart(rows=2, columns=3)
-
-    # chart.add_subplot(domain="Singapore")
-
-    # chart.stock_img()
-    # chart.coastlines()
-    # chart.borders()
-    # chart.gridlines()
-
-    # chart.subplot_titles("{domain}")
-
-    # st.image(chart)
 
 with ndc_tab:
-    st.subheader("Nationally Determined Contributions (NDCs)")
-    st.markdown("Analysis of NDCs is under development.")
+    # Guide: https://unfccc.int/NDCREG
+    st.subheader("An AI analysis of Nationally Determined Contributions (NDCs)")
+
+    @st.cache_resource
+    def get_top_agent():
+        return multi_document_agents()
+
+    with st.spinner("Summarizing Singapore's NDC..."):
+        top_agent = get_top_agent()
+
+        @st.cache_data
+        def generating_singapore_ndc_summary():
+            prompt = "Give me a summary of all the aspects of Singapore's NDC"
+            return top_agent.query(prompt)
+
+        singapore_ndc_summary_response = generating_singapore_ndc_summary()
+        with st.expander("View an AI generated summary of Singapore's NDC. <click here to expand>"):
+            st.markdown(f"{singapore_ndc_summary_response}")
+
+    st.subheader("A comparative analysis of NDCs")
+    sea_countries = [
+        "Cambodia",
+        "Myanmar",
+        "Laos",
+        "Singapore",
+        "Brunei",
+        "Vietnam",
+        "Malaysia",
+        "Indonesia",
+    ]
+    st.markdown(
+        f"This section performs a comparative analysis of NDCs of countries in the South East Asia (SEA) region. "
+        f"Countries available for NDC analysis: {', '.join(sea_countries)}."
+    )
+    # options = state.ndc_comparison
+    state.ndc_comparison = st.multiselect(
+        "Select at least 2 SEA countries to compare their NDCs",
+        sea_countries,
+    )
+
+    if len(state.ndc_comparison) >= 2:
+       with st.spinner("Comparing NDCs..."):
+
+            @st.cache_data
+            def generating_ndc_comparisons(selected_countries):
+                prompt = f"Compare the NDCs of these countries: {selected_countries}"
+                return top_agent.query(prompt)
+
+            comparison_response = generating_ndc_comparisons(tuple(state.ndc_comparison))
+            # comparison_response = top_agent.query(countries_ndc_comparison_query_prompt)
+            with st.expander("AI comparison of chosen NDCs. <click here to expand>"):
+                st.markdown(f"{comparison_response}")
+    else:
+        st.info("Select countries from the list above to compare their NDCs.")
+
 
 with ncqg_tab:
     st.subheader("New Collective Quantified Goal (NCQG)")
-    st.markdown("Analysis of NCQG is under development.")
+    st.markdown("NCQG are to be submitted by February 2025.")
+    st.markdown("Plese find more information [here](https://unfccc.int/NCQG).")
 
 with action_tab:
     st.subheader("Take Action Now!")
-    st.markdown("Select your country below to find out how you can take action.")
-    country = st.selectbox("Select your country", countries_list())
+    st.text(
+        "This section has NOT been implemented yet. It is under active development."
+    )
+    st.markdown(
+        "To take action, we will be sending emails to public representatives in your country!"
+    )
+    country = st.selectbox("First, select your country", countries_list())
     st.markdown(
         f"Click the button below to send emails to ALL your public representatives in {country}!"
     )
 
-    if st.button("💻Make a Difference!🧿"):
+    if st.button("💻 Make a Difference! 🧿"):
         st.success(
-            "🦹Under development"
+            "🦹 Under development"
         )  # Placeholder for future functionality: Emails sent successfully!
         st.balloons()

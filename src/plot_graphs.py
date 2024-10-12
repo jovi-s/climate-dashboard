@@ -117,7 +117,7 @@ def global_temperature_anomaly(text):
     plt.plot(df["Year"], df["Lowess(5)"], label="Lowess(5)", color="red")
     plt.title("Global Land-Ocean Temperature Index (Comparison)")
     plt.xlabel("Year")
-    plt.ylabel("Temperature Anomaly (°C)")
+    plt.ylabel("Temperature Anomaly w.r.t. 1951-80 (°C)")
     plt.grid(True)
     plt.legend()
 

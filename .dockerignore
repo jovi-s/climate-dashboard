@@ -1,0 +1,10 @@
+__pycache__/
+.ruff_cache/
+.venv/
+.vscode/
+notebooks/
+src/__pycache__/
+.gitignore
+CHANGELOG.md
+Makefile
+README.md
