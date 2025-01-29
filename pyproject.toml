@@ -4,9 +4,10 @@ version = "0.0.3"
 description = ""
 authors = ["Jovinder Singh <jovinder@yahoo.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.13"
 streamlit = "^1.37.1"
 pyyaml = "^6.0.2"
 ruff = "^0.5.7"

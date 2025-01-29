@@ -20,6 +20,9 @@ os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
 
 
 def multi_document_agents():
+    """NDCs from: https://unfccc.int/NDCREG
+    Code Adapted from: https://docs.llamaindex.ai/en/stable/examples/agent/multi_document_agents/
+    """
     Settings.llm = OpenAI(temperature=0, model="gpt-4o-mini")
     Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small")
 
@@ -30,14 +33,14 @@ def multi_document_agents():
     query_engines = {}
 
     ndc_file_name_path_mapping = {
-        "Cambodia": "data/ndc/20201231_NDC_Update_Cambodia.pdf",
-        "Myanmar": "data/ndc/Myanmar Updated  NDC July 2021.pdf",
-        "Laos": "data/ndc/NDC 2020 of Lao PDR (English), 09 April 2021 (1).pdf",
-        "Singapore": "data/ndc/Singapore Second Update of First NDC.pdf",
         "Brunei": "data/ndc/Brunei Darussalam's NDC 2020.pdf",
-        "Vietnam": "data/ndc/Viet Nam NDC 2022 Update.pdf",
-        "Malaysia": "data/ndc/Malaysia NDC Updated Submission to UNFCCC July 2021 final.pdf",
+        "Cambodia": "data/ndc/20201231_NDC_Update_Cambodia.pdf",
         "Indonesia": "data/ndc/ENDC Indonesia.pdf",
+        "Laos": "data/ndc/NDC 2020 of Lao PDR (English), 09 April 2021 (1).pdf",
+        "Malaysia": "data/ndc/Malaysia NDC Updated Submission to UNFCCC July 2021 final.pdf",
+        "Myanmar": "data/ndc/Myanmar Updated  NDC July 2021.pdf",
+        "Singapore": "data/ndc/Singapore Second Update of First NDC.pdf",
+        "Vietnam": "data/ndc/Viet Nam NDC 2022 Update.pdf",
     }
 
     sea_countries = list(ndc_file_name_path_mapping.keys())
@@ -54,7 +57,9 @@ def multi_document_agents():
 
         # load index
         vector_index = load_index_from_storage(
-            StorageContext.from_defaults(persist_dir=f"./data/vector_store/{country}"),
+            StorageContext.from_defaults(
+                persist_dir=f"./data/vector_store/ndc/{country}"
+            ),
         )
 
         # build summary index
@@ -128,10 +133,8 @@ def multi_document_agents():
     top_agent = OpenAIAgent.from_tools(
         tool_retriever=obj_index.as_retriever(similarity_top_k=3),
         system_prompt=""" \
-    You are an agent designed to answer queries about a set of given South East Asia countries.
-    Please always use the tools provided to answer a question. Do not rely on prior knowledge.\
-
-    """,
+You are an agent designed to answer queries about a set of given South East Asia countries.
+Please always use the tools provided to answer a question. Do not rely on prior knowledge.""",
         verbose=True,
     )
 

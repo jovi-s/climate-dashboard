@@ -37,5 +37,4 @@ COPY . /app
 EXPOSE 8080
 
 # Specify the command to run the Streamlit app using Poetry
-# Replace 'your_streamlit_app.py' with the path to your actual Streamlit application
 CMD ["poetry", "run", "streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
