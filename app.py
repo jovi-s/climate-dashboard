@@ -1,6 +1,9 @@
+import time
+
 import streamlit as st
 import yaml
 
+from src.btr import btr_rag
 from src.ndc_inference import multi_document_agents
 from src.plot_graphs import (
     fetch_data,
@@ -38,8 +41,8 @@ st.text("This app is in active development.")
 
 # Tabs
 # Add 'Regional' in future iterations
-global_tab, local_tab, ndc_tab, ncqg_tab, action_tab = st.tabs(
-    ["Global", "Local", "NDCs", "NCQG", "Take Action!"]
+global_tab, local_tab, ndc_tab, btr_tab, action_tab = st.tabs(
+    ["Global", "Local", "NDCs", "BTRs", "Take Action!"]
 )
 
 
@@ -201,7 +204,9 @@ with ndc_tab:
             return top_agent.query(prompt)
 
         singapore_ndc_summary_response = generating_singapore_ndc_summary()
-        with st.expander("View an AI generated summary of Singapore's NDC. <click here to expand>"):
+        with st.expander(
+            "View an AI generated summary of Singapore's NDC. <click here to expand>"
+        ):
             st.markdown(f"{singapore_ndc_summary_response}")
 
     st.subheader("A comparative analysis of NDCs")
@@ -226,14 +231,16 @@ with ndc_tab:
     )
 
     if len(state.ndc_comparison) >= 2:
-       with st.spinner("Comparing NDCs..."):
+        with st.spinner("Comparing NDCs..."):
 
             @st.cache_data
             def generating_ndc_comparisons(selected_countries):
                 prompt = f"Compare the NDCs of these countries: {selected_countries}"
                 return top_agent.query(prompt)
 
-            comparison_response = generating_ndc_comparisons(tuple(state.ndc_comparison))
+            comparison_response = generating_ndc_comparisons(
+                tuple(state.ndc_comparison)
+            )
             # comparison_response = top_agent.query(countries_ndc_comparison_query_prompt)
             with st.expander("AI comparison of chosen NDCs. <click here to expand>"):
                 st.markdown(f"{comparison_response}")
@@ -241,10 +248,36 @@ with ndc_tab:
         st.info("Select countries from the list above to compare their NDCs.")
 
 
-with ncqg_tab:
-    st.subheader("New Collective Quantified Goal (NCQG)")
-    st.markdown("NCQG are to be submitted by February 2025.")
-    st.markdown("Plese find more information [here](https://unfccc.int/NCQG).")
+with btr_tab:
+    st.subheader("An AI Chatbot with Biennial Transparency Reports (BTR)")
+    st.markdown(
+        "Please find more information [here](https://unfccc.int/first-biennial-transparency-reports)."
+    )
+    sea_countries_btr = [
+        "Singapore",
+        # "Malaysia",
+    ]
+    btr_rag_country = st.selectbox(
+        "Select a country to chat with its BTR", sea_countries_btr
+    )
+    btr_rag_agent = btr_rag(btr_rag_country)
+
+    with st.container(height=400):
+        if btr_query := st.chat_input("Enter a question for the BTR"):
+            with st.chat_message("user"):
+                st.markdown(btr_query)
+
+            with st.chat_message("assistant"):
+                # btr_response = btr_rag_agent.chat(btr_query)
+                btr_response = btr_rag_agent.query(btr_query)
+
+                def stream_data():
+                    for word in str(btr_response).split(" "):
+                        yield word + " "
+                        time.sleep(0.02)
+
+                st.write_stream(stream_data)
+
 
 with action_tab:
     st.subheader("Take Action Now!")
