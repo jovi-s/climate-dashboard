@@ -1,20 +1,20 @@
 # Use the official Python 3.12.6 slim image as the base
-FROM python:3.12.6-slim
+FROM python:3.12.8-slim
 
 # Set environment variables to prevent Python from writing .pyc files and to buffer stdout/stderr
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
 # Define Poetry version
-ENV POETRY_VERSION=1.7.1
+ENV POETRY_VERSION=2.0.1
 
-# Install system dependencies and Poetry
+# Install system dependencies including gcc and Poetry
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl build-essential && \
+    apt-get install -y --no-install-recommends curl build-essential gcc && \
     curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION && \
     ln -s /root/.local/bin/poetry /usr/local/bin/poetry && \
     # Clean up to reduce image size
-    apt-get remove -y build-essential curl && \
+    apt-get remove -y curl && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
@@ -28,7 +28,8 @@ COPY pyproject.toml poetry.lock* /app/
 RUN poetry config virtualenvs.create false
 
 # Install project dependencies using Poetry
-RUN poetry install --no-root --no-interaction --no-ansi --no-dev --no-cache
+RUN pip install --upgrade pip setuptools wheel
+RUN poetry install --no-root --no-interaction --no-ansi --no-cache
 
 # Copy the rest of the application code
 COPY . /app

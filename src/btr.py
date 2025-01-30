@@ -4,11 +4,9 @@ import streamlit as st
 from llama_index.core import Settings, StorageContext, load_index_from_storage
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
-from llama_index.postprocessor.flag_embedding_reranker import (
-    FlagEmbeddingReranker,
-)
-from llama_index.core.tools import QueryEngineTool
-from llama_index.core.agent import ReActAgent
+from llama_index.core.postprocessor import SentenceTransformerRerank
+# from llama_index.core.tools import QueryEngineTool
+# from llama_index.core.agent import ReActAgent
 
 
 os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
@@ -21,6 +19,7 @@ def get_btr_pdf(base_link="https://unfccc.int/first-biennial-transparency-report
 def btr_rag(country="Singapore"):
     """Code adapted from:
     https://docs.llamaindex.ai/en/stable/examples/cookbooks/oreilly_course_cookbooks/Module-8/Advanced_RAG_with_LlamaParse/#llamaparse-pdf-reader-for-pdf-parsing
+    https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/SentenceTransformerRerank/
     """
 
     embed_model = OpenAIEmbedding(model="text-embedding-3-small")
@@ -33,10 +32,7 @@ def btr_rag(country="Singapore"):
         StorageContext.from_defaults(persist_dir=f"./data/vector_store/btr/{country}"),
     )
 
-    reranker = FlagEmbeddingReranker(
-        top_n=5,
-        model="BAAI/bge-reranker-large",
-    )
+    reranker = SentenceTransformerRerank(model="models/rerank", top_n=5)
 
     recursive_query_engine = recursive_index.as_query_engine(
         similarity_top_k=15, node_postprocessors=[reranker], verbose=True
@@ -54,5 +50,4 @@ def btr_rag(country="Singapore"):
 # You are an agent designed to answer queries about a given country's Biennial Transparency Report (BTR).
 # Please always use the tool provided to answer a question. Do not rely on prior knowledge.
 # """)
-
-    # return agent
+# return agent

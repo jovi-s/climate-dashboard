@@ -196,14 +196,21 @@ with ndc_tab:
         return multi_document_agents()
 
     with st.spinner("Summarizing Singapore's NDC..."):
-        top_agent = get_top_agent()
+        # top_agent = get_top_agent()
 
-        @st.cache_data
-        def generating_singapore_ndc_summary():
-            prompt = "Give me a summary of all the aspects of Singapore's NDC"
-            return top_agent.query(prompt)
+        # @st.cache_data
+        # def generating_singapore_ndc_summary():
+        #     prompt = "Give me a summary of all the aspects of Singapore's NDC"
+        #     return top_agent.query(prompt)
 
-        singapore_ndc_summary_response = generating_singapore_ndc_summary()
+        def read_text_file(file_path):
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            return content
+
+        singapore_ndc_summary_response = read_text_file(
+            "data/ndc/SingaporeNDCSummary.txt"
+        )  # generating_singapore_ndc_summary()
         with st.expander(
             "View an AI generated summary of Singapore's NDC. <click here to expand>"
         ):
@@ -232,6 +239,7 @@ with ndc_tab:
 
     if len(state.ndc_comparison) >= 2:
         with st.spinner("Comparing NDCs..."):
+            top_agent = get_top_agent()
 
             @st.cache_data
             def generating_ndc_comparisons(selected_countries):
@@ -245,7 +253,7 @@ with ndc_tab:
             with st.expander("AI comparison of chosen NDCs. <click here to expand>"):
                 st.markdown(f"{comparison_response}")
     else:
-        st.info("Select countries from the list above to compare their NDCs.")
+        st.info("Select countries from the dropdown above to compare their NDCs.")
 
 
 with btr_tab:
@@ -253,6 +261,11 @@ with btr_tab:
     st.markdown(
         "Please find more information [here](https://unfccc.int/first-biennial-transparency-reports)."
     )
+
+    @st.cache_resource
+    def get_btr_rag_agent(country):
+        return btr_rag(country)
+
     sea_countries_btr = [
         "Singapore",
         # "Malaysia",
@@ -260,7 +273,7 @@ with btr_tab:
     btr_rag_country = st.selectbox(
         "Select a country to chat with its BTR", sea_countries_btr
     )
-    btr_rag_agent = btr_rag(btr_rag_country)
+    btr_rag_agent = get_btr_rag_agent(btr_rag_country)
 
     with st.container(height=400):
         if btr_query := st.chat_input("Enter a question for the BTR"):
@@ -281,9 +294,7 @@ with btr_tab:
 
 with action_tab:
     st.subheader("Take Action Now!")
-    st.text(
-        "This section has NOT been implemented yet. It is under active development."
-    )
+    st.text("This section has NOT been implemented yet.")
     st.markdown(
         "To take action, we will be sending emails to public representatives in your country!"
     )
