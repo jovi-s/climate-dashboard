@@ -1,0 +1,177 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import { MultiSelect } from "@/components/multi-selector";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton"
+import { Card } from '@/components/ui/card';
+import NDCTracker from "@/components/ndc-tracker";
+
+
+function SkeletonCard() {
+  return (
+    <div className="flex flex-col space-y-3">
+      <Skeleton className="h-[125px] w-[250px] rounded-xl" />
+      <div className="space-y-2">
+        <Skeleton className="h-4 w-[250px]" />
+        <Skeleton className="h-4 w-[200px]" />
+      </div>
+    </div>
+  )
+}
+
+export default function NDCs() {
+  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
+  const [summary, setSummary] = useState("Loading...");
+  const [apiText, setApiText] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('apiText') || "";
+    }
+    return "";
+  });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const countries = [
+    "Cambodia",
+    "Myanmar",
+    "Laos",
+    "Singapore",
+    "Brunei",
+    "Vietnam",
+    "Malaysia",
+    "Indonesia",
+  ];
+
+  // Fetch the summary text when the component mounts
+  useEffect(() => {
+    fetch("/assets/SingaporeNDCSummary.txt")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((data) => setSummary(data))
+      .catch(() => setSummary("Failed to load summary."));
+  }, []);
+
+  // Handler for running the analysis on button click
+  const handleRunAnalysis = async () => {
+    // Validate that at least 2 countries are selected
+    if (selectedCountries.length < 2) {
+      alert("Please select at least 2 countries for comparison.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      // Join the selected countries into a comma-separated string
+      const query = selectedCountries.join(",");
+      const url = `${process.env.NEXT_PUBLIC_PYTHON_BACKEND}/api/ndc-comparison?selected_countries=${encodeURIComponent(query)}`;
+
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      setApiText(data.text);
+      localStorage.setItem('apiText', data.text); // Save to localStorage
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setApiText("Error fetching analysis.");
+      localStorage.setItem('apiText', "Error fetching analysis."); // Save error message to localStorage
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <section className="p-8 min-h-screen bg-white">
+      <div className="mt-16 max-w-4xl mx-auto">
+        <div className="mb-12">
+          <NDCTracker />
+        </div>
+        <div className="mb-12">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            AI analysis of UNFCCC Nationally Determined Contributions (NDCs)
+          </h2>
+          <p>
+            View an AI-generated summary of Singapore's NDC (2022). For more details, refer to the official document{" "}
+            <a
+              href="https://unfccc.int/sites/default/files/NDC/2022-11/Singapore%20Second%20Update%20of%20First%20NDC.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>.
+          </p>
+          <details className="border border-gray-300 p-4 rounded-lg">
+            <summary className="cursor-pointer text-blue-600 font-medium">
+              <span>Click here to expand</span>
+            </summary>
+            <div className="prose prose-lg max-w-none mt-4">
+              <ReactMarkdown rehypePlugins={[rehypeRaw]}>{summary}</ReactMarkdown>
+            </div>
+          </details>
+        </div>
+
+        <div className="mt-16 max-w-4xl mx-auto">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            An AI comparative analysis of NDCs
+          </h2>
+          <p className="text-gray-700 mb-6">
+            This section performs a comparative analysis of NDCs of countries in the South East Asia (SEA) region using
+            generative AI. Countries available for NDC analysis:
+            <strong> Cambodia, Myanmar, Laos, Singapore, Brunei, Vietnam, Malaysia, Indonesia</strong>.
+          </p>
+          <label htmlFor="country-select" className="block mb-2 font-medium text-gray-700">
+            Select at least 2 SEA countries to compare their NDCs:
+          </label>
+          <div className="max-w-4xl mx-auto">
+            <MultiSelect
+              options={countries}
+              selected={selectedCountries}
+              onChange={setSelectedCountries}
+              placeholder="Select countries..."
+            />
+          </div>
+
+          {/* Button section: Conditionally render the button based on the loading state */}
+          <div className="mt-4">
+            {isLoading ? (
+              <Button disabled>
+                <Loader2 className="animate-spin mr-2" />
+                Please wait
+              </Button>
+            ) : (
+              <Button variant="secondary" onClick={handleRunAnalysis}>
+                Click here to run analysis!
+              </Button>
+            )}
+          </div>
+
+          {/* AI Response section */}
+          <div className="mt-8">
+              {isLoading ? (
+                <SkeletonCard />
+              ) : (
+              <Card className="mb-7 flex min-h-[564px] w-full min-w-fit rounded-lg border px-5 py-4 font-medium dark:border-zinc-800">
+                <ReactMarkdown className="font-medium dark:text-white">
+                  {apiText ? apiText : 'AI generated response will appear here...'}
+                </ReactMarkdown>
+              </Card>
+            )}
+          </div>
+          <div className="flex justify-end">
+            <Button variant="secondary" onClick={() => setApiText("")}>
+              Clear AI Response
+            </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

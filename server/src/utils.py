@@ -1,0 +1,130 @@
+from io import BytesIO
+from urllib.parse import urljoin
+
+import pandas as pd
+import requests
+from bs4 import BeautifulSoup
+from PIL import Image
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"
+}
+
+
+def fetch_data(url):
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()  # Ensure we notice bad responses
+    return response.text
+
+
+def fetch_global_data(config):
+    co2_data = fetch_data(config["IMAGES_DATA"]["Carbon Dioxide (PPM)"]["URL"])
+    methane_data = fetch_data(config["IMAGES_DATA"]["Atmospheric Methane (PPB)"]["URL"])
+    temp_data = fetch_data(
+        config["IMAGES_DATA"]["Global Temperature Anomaly (C)"]["URL"]
+    )
+    ocean_data = fetch_data(config["IMAGES_DATA"]["World Ocean Warming (C)"]["URL"])
+    return co2_data, methane_data, temp_data, ocean_data
+
+
+# Function to display an image from a URL in Streamlit
+def display_image_from_url(image_url):
+    # Load the image from the URL
+    response = requests.get(image_url)
+    img = Image.open(BytesIO(response.content))
+
+    return img
+
+
+def countries_list():
+    # Load the list of countries from a CSV file
+    countries_df = pd.read_csv("data/list_of_countries.csv")
+
+    return countries_df["Name"].tolist()
+
+
+climate_action_tracker_countries = [
+    "singapore",
+    "argentina",
+    "australia",
+    "bhutan",
+    "brazil",
+    "canada",
+    "chile",
+    "china",
+    "colombia",
+    "costa-rica",
+    "eu",
+    "egypt",
+    "ethiopia",
+    "gabon",
+    "germany",
+    "india",
+    "indonesia",
+    "iran",
+    "japan",
+    "kazakhstan",
+    "kenya",
+    "mexico",
+    "morocco",
+    "nepal",
+    "new-zealand",
+    "nigeria",
+    "norway",
+    "peru",
+    "philippines",
+    "russian-federation",
+    "saudi-arabia",
+    "south-africa",
+    "south-korea",
+    "switzerland",
+    "thailand",
+    "gambia",
+    "turkey",
+    "uae",
+    "usa",
+    "ukraine",
+    "uk",
+    "vietnam",
+]
+
+
+def fetch_and_extract_href(url):
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        # Locate the <div> with data-component-graph-embed
+        graph_div = soup.find("div", attrs={"data-component-graph-embed": True})
+        if graph_div:
+            # Extract the 'data-props-graph-hires-image-url'
+            relative_href = graph_div.get("data-props-graph-hires-image-url")
+            if relative_href:
+                absolute_href = urljoin(url, relative_href)
+                return absolute_href
+            else:
+                return "'data-props-graph-hires-image-url' attribute not found."
+        else:
+            return "<div> with 'data-component-graph-embed' not found."
+    except requests.exceptions.RequestException as e:
+        return f"Request failed: {e}"
+
+
+# https://unfccc.int/NDCREG
+# https://unfccc.int/first-biennial-transparency-reports
+ndc_tracker_data = {
+    "Singapore": {"ndc_count": 2, "btr_submitted": 1},
+    "Malaysia": {"ndc_count": 2, "btr_submitted": 1},
+    "Indonesia": {"ndc_count": 2, "btr_submitted": 1},
+    "Vietnam": {"ndc_count": 2, "btr_submitted": 0},
+    "Thailand": {"ndc_count": 2, "btr_submitted": 1},
+    "Philippines": {"ndc_count": 1, "btr_submitted": 0},
+    "Myanmar": {"ndc_count": 2, "btr_submitted": 0},
+    "Cambodia": {"ndc_count": 2, "btr_submitted": 1},
+    "Laos": {"ndc_count": 2, "btr_submitted": 0},
+    "Brunei": {"ndc_count": 1, "btr_submitted": 1},
+    "Timor-Leste": {"ndc_count": 2, "btr_submitted": 0},
+    # Add more countries as needed.
+}
+# Accurate as of 2025-02-02
