@@ -124,12 +124,12 @@ def initialize_btr_rag(btr_rag_country: str):
     """
     global btr_query_engine
     if btr_query_engine is not None:
-        print(f"BTR RAG agent already initialized for country: {btr_rag_country}")
+        # print(f"BTR RAG agent already initialized for country: {btr_rag_country}")
         return {"message": f"BTR RAG agent already initialized for {btr_rag_country}"}
 
     # Initialize and store the agent for the specified country
     btr_query_engine = BTRRAGAgent(btr_rag_country)
-    print(f"BTR RAG agent initialized for country: {btr_rag_country}")
+    # print(f"BTR RAG agent initialized for country: {btr_rag_country}")
     return {"message": f"BTR RAG agent initialized for {btr_rag_country}"}
 
 
@@ -153,13 +153,13 @@ async def handle_chat_data(request: Request):
 
     # Get the response text from the agent
     content_list = [message.content for message in messages]
-    print(content_list)
+    # print(content_list)
     input = content_list[-1]
     print(input)
     response_text = btr_query_engine.query(input)
-    print(response_text)
+    # print(response_text)
 
-    # Here we define a simple generator that yields chunks of text.
+    # Define a generator that yields chunks of text
     async def simple_stream():
         chunk_size = 100
         for i in range(0, len(response_text), chunk_size):
