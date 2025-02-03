@@ -194,9 +194,12 @@ export default function GraphSection() {
             zIndex: 1000,
           }}
         >
-          <img
+          <Image
             src={enlargedImage.src}
             alt={enlargedImage.alt}
+            layout="intrinsic"
+            width={900}
+            height={900}
             style={{ maxWidth: "90%", maxHeight: "90%" }}
           />
         </div>

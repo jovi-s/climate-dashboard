@@ -27,3 +27,11 @@ View climate change statistics around your location.
 - [Streamlit st.cache_resource](https://docs.streamlit.io/develop/api-reference/caching-and-state/st.cache_resource)
 - [Online Convert](https://www.online-convert.com/)
 - [Healthy-NDCs-Scorecard_2023-Report.pdf](https://climateandhealthalliance.org/wp-content/uploads/2023/05/Healthy-NDCs-Scorecard_2023-Report.pdf)
+
+## Deployment
+
+### Fly.io
+
+1. fly launch --wait-timeout 600
+2. fly apps restart <app name>
+3. fly machine restart <machine id>

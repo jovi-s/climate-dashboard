@@ -125,7 +125,7 @@ function childrenTakeAllStringContents(element: any): string {
   }
 
   if (element?.props?.children) {
-    let children = element.props.children
+    const children = element.props.children
 
     if (Array.isArray(children)) {
       return children
@@ -187,7 +187,7 @@ const COMPONENTS = {
 }
 
 function withClass(Tag: keyof JSX.IntrinsicElements, classes: string) {
-  const Component = ({ node, ...props }: any) => (
+  const Component = ({ ...props }: any) => (
     <Tag className={classes} {...props} />
   )
   Component.displayName = Tag

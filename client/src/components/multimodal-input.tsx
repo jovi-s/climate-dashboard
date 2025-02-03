@@ -33,7 +33,7 @@ const suggestedActions = [
 ];
 
 export function MultimodalInput({
-  chatId,
+  // chatId,
   input,
   setInput,
   isLoading,
@@ -44,7 +44,7 @@ export function MultimodalInput({
   handleSubmit,
   className,
 }: {
-  chatId: string;
+  // chatId: string;
   input: string;
   setInput: (value: string) => void;
   isLoading: boolean;

@@ -99,7 +99,7 @@ export default function NDCs() {
             AI analysis of UNFCCC Nationally Determined Contributions (NDCs)
           </h2>
           <p>
-            View an AI-generated summary of Singapore's NDC (2022). For more details, refer to the official document{" "}
+            View an AI-generated summary of Singapore&apos;s NDC (2022). For more details, refer to the official document{" "}
             <a
               href="https://unfccc.int/sites/default/files/NDC/2022-11/Singapore%20Second%20Update%20of%20First%20NDC.pdf"
               target="_blank"

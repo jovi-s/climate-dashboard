@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import Image from "next/image";
 
 
 export default function Local() {
@@ -106,7 +107,7 @@ export default function Local() {
 
         {imageUrl && (
           <div className="mt-6">
-            <img src={imageUrl} alt={`${selectedCountry} Overview`} className="w-full rounded-lg" />
+            <Image src={imageUrl} alt={`${selectedCountry} Overview`} layout="responsive" width={700} height={400} className="w-full rounded-lg" />
           </div>
         )}
 

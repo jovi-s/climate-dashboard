@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for server-floral-grass-7606 on 2025-02-03T21:53:29+08:00
+# fly.toml app configuration file generated for server-old-leaf-1936 on 2025-02-03T22:27:26+08:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'server-floral-grass-7606'
-primary_region = 'syd'
+app = 'server-old-leaf-1936'
+primary_region = 'sin'
 
 [build]
 
