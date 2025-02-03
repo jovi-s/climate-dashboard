@@ -35,6 +35,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
+### Steps
+
+1. Add 'client' as Root Directory
+2. Copy clent/.env variables to project Settings
+3. Use install command `npm install --force` under 'Build & Development Settings' in 'Project Settings'
+
 ## Modifications
 
 Added FastAPI Python server alongside, making this a full-stack project repository!
