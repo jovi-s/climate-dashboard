@@ -3,13 +3,61 @@
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
-import { MultiSelect } from "@/components/multi-selector";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton"
-import { Card } from '@/components/ui/card';
+import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/components/ui/card";
 import NDCTracker from "@/components/ndc-tracker";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
+// Create a reusable component that replaces your MultiSelect.
+type DropdownMenuCheckboxesProps = {
+  options: string[];
+  selected: string[];
+  onChange: (selected: string[]) => void;
+};
+
+function DropdownMenuCheckboxes({
+  options,
+  selected,
+  onChange,
+}: DropdownMenuCheckboxesProps) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">
+          {selected.length > 0 ? selected.join(", ") : "Select countries..."}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Select Countries</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {options.map((option) => (
+          <DropdownMenuCheckboxItem
+            key={option}
+            checked={selected.includes(option)}
+            onCheckedChange={(checked: boolean) => {
+              if (checked) {
+                onChange([...selected, option]);
+              } else {
+                onChange(selected.filter((c) => c !== option));
+              }
+            }}
+          >
+            {option}
+          </DropdownMenuCheckboxItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 function SkeletonCard() {
   return (
@@ -20,15 +68,15 @@ function SkeletonCard() {
         <Skeleton className="h-4 w-[200px]" />
       </div>
     </div>
-  )
+  );
 }
 
 export default function NDCs() {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [summary, setSummary] = useState("Loading...");
   const [apiText, setApiText] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('apiText') || "";
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("apiText") || "";
     }
     return "";
   });
@@ -70,7 +118,9 @@ export default function NDCs() {
     try {
       // Join the selected countries into a comma-separated string
       const query = selectedCountries.join(",");
-      const url = `${process.env.NEXT_PUBLIC_PYTHON_BACKEND}/api/ndc-comparison?selected_countries=${encodeURIComponent(query)}`;
+      const url = `${process.env.NEXT_PUBLIC_PYTHON_BACKEND}/api/ndc-comparison?selected_countries=${encodeURIComponent(
+        query
+      )}`;
 
       const response = await fetch(url);
       if (!response.ok) {
@@ -78,11 +128,11 @@ export default function NDCs() {
       }
       const data = await response.json();
       setApiText(data.text);
-      localStorage.setItem('apiText', data.text); // Save to localStorage
+      localStorage.setItem("apiText", data.text); // Save to localStorage
     } catch (error) {
       console.error("Error fetching data:", error);
       setApiText("Error fetching analysis.");
-      localStorage.setItem('apiText', "Error fetching analysis."); // Save error message to localStorage
+      localStorage.setItem("apiText", "Error fetching analysis.");
     } finally {
       setIsLoading(false);
     }
@@ -99,21 +149,25 @@ export default function NDCs() {
             AI analysis of UNFCCC Nationally Determined Contributions (NDCs)
           </h2>
           <p>
-            View an AI-generated summary of Singapore&apos;s NDC (2022). For more details, refer to the official document{" "}
+            View an AI-generated summary of Singapore&apos;s NDC (2022). For more
+            details, refer to the official document{" "}
             <a
               href="https://unfccc.int/sites/default/files/NDC/2022-11/Singapore%20Second%20Update%20of%20First%20NDC.pdf"
               target="_blank"
               rel="noopener noreferrer"
             >
               here
-            </a>.
+            </a>
+            .
           </p>
           <details className="border border-gray-300 p-4 rounded-lg">
             <summary className="cursor-pointer text-blue-600 font-medium">
               <span>Click here to expand</span>
             </summary>
             <div className="prose prose-lg max-w-none mt-4">
-              <ReactMarkdown rehypePlugins={[rehypeRaw]}>{summary}</ReactMarkdown>
+              <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                {summary}
+              </ReactMarkdown>
             </div>
           </details>
         </div>
@@ -123,19 +177,27 @@ export default function NDCs() {
             An AI comparative analysis of NDCs
           </h2>
           <p className="text-gray-700 mb-6">
-            This section performs a comparative analysis of NDCs of countries in the South East Asia (SEA) region using
-            generative AI. Countries available for NDC analysis:
-            <strong> Cambodia, Myanmar, Laos, Singapore, Brunei, Vietnam, Malaysia, Indonesia</strong>.
+            This section performs a comparative analysis of NDCs of countries in the
+            South East Asia (SEA) region using generative AI. Countries available for
+            NDC analysis:
+            <strong>
+              {" "}
+              Cambodia, Myanmar, Laos, Singapore, Brunei, Vietnam, Malaysia,
+              Indonesia
+            </strong>
+            .
           </p>
-          <label htmlFor="country-select" className="block mb-2 font-medium text-gray-700">
+          <label
+            htmlFor="country-select"
+            className="block mb-2 font-medium text-gray-700"
+          >
             Select at least 2 SEA countries to compare their NDCs:
           </label>
           <div className="max-w-4xl mx-auto">
-            <MultiSelect
+            <DropdownMenuCheckboxes
               options={countries}
               selected={selectedCountries}
               onChange={setSelectedCountries}
-              placeholder="Select countries..."
             />
           </div>
 
@@ -155,12 +217,14 @@ export default function NDCs() {
 
           {/* AI Response section */}
           <div className="mt-8">
-              {isLoading ? (
-                <SkeletonCard />
-              ) : (
+            {isLoading ? (
+              <SkeletonCard />
+            ) : (
               <Card className="mb-7 flex min-h-[564px] w-full min-w-fit rounded-lg border px-5 py-4 font-medium dark:border-zinc-800">
                 <ReactMarkdown className="font-medium dark:text-white">
-                  {apiText ? apiText : 'AI generated response will appear here...'}
+                  {apiText
+                    ? apiText
+                    : "AI generated response will appear here..."}
                 </ReactMarkdown>
               </Card>
             )}
