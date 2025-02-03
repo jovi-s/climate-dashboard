@@ -40,6 +40,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 1. Add 'client' as Root Directory
 2. Copy clent/.env variables to project Settings
 3. Use install command `npm install --force` under 'Build & Development Settings' in 'Project Settings'
+4. Test build locally
+    - `npm run build`
 
 ## Modifications
 
