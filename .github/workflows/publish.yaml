@@ -20,6 +20,7 @@ jobs:
 
       - name: Build the climate-crisis-app Docker image
         run: |
+          cd server
           docker build . --tag ghcr.io/jovi-s/climate-crisis-app:latest
           docker run ghcr.io/jovi-s/climate-crisis-app:latest
           docker push ghcr.io/jovi-s/climate-crisis-app:latest
