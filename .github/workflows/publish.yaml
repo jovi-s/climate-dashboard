@@ -6,33 +6,20 @@ on:
       - full-stack  # only triggers on this branch
 
 jobs:
-
   publish-climate-crisis-app-image:
-
     runs-on: ubuntu-latest
-
     steps:
-
       - uses: actions/checkout@v2
 
       - name: Login to GitHub Container Registry
-
-      uses: docker/login-action@v1
-
-      with:
-
-        registry: ghcr.io
-
-        username: ${{ github.actor }}
-
-        password: ${{ secrets.GITHUB_TOKEN }}
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build the climate-crisis-app Docker image
-
         run: |
-
           docker build . --tag ghcr.io/jovi-s/climate-crisis-app:latest
-
           docker run ghcr.io/jovi-s/climate-crisis-app:latest
-
           docker push ghcr.io/jovi-s/climate-crisis-app:latest
