@@ -30,7 +30,34 @@ View climate change statistics around your location.
 
 ## Deployment
 
-### Fly.io
+### Render
+
+1. Using GitHub backed service doesn't contain data/ and models/ directories as these are not pushed to GitHub thus the server returns ERROR when fetching data
+2. https://render.com/docs/deploying-an-image
+    - Create a pre-built docker image -> push it to a container registry and use this!
+    - Google Artifact Registry Service Account: https://console.cloud.google.com/iam-admin/serviceaccounts?walkthrough_id=iam--create-service-account&project=climate-dashboard-docker-image
+
+3. Push to Google Artifact Registry  
+(https://cloud.google.com/artifact-registry/docs/docker/store-docker-container-images)  
+(https://cloud.google.com/artifact-registry/docs/docker/pushing-and-pulling)  
+    1. `gcloud components update`
+    2. `gcloud auth configure-docker us-central1-docker.pkg.dev`
+    3. `docker build ...`
+    4. `docker tag ?? us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images climate-crisis-app:latest`
+    5. `docker push us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest`
+    6. us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest
+    6. service account username: python-backend@climate-dashboard-docker-image.iam.gserviceaccount.com
+    7. docker username: oauth2accesstoken
+    8. PAT: gcloud auth print-access-token
+
+4. Pull
+    1. `docker pull us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest`
+
+Render:
+Starter	$7/month	512 MB RAM	0.5 CPU
+NEED 1GB RAM!
+
+### Fly.io <archived>
 
 1. fly launch --wait-timeout 600
 2. fly apps restart <app name>

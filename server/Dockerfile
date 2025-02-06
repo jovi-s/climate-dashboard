@@ -15,7 +15,7 @@ RUN apt-get update && \
     ln -s /root/.local/bin/poetry /usr/local/bin/poetry && \
     # Clean up to reduce image size
     apt-get purge -y --auto-remove curl && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* /root/.cache/pip
 
 # Set the working directory to /app
 WORKDIR /app
@@ -36,5 +36,4 @@ COPY . /app
 EXPOSE 8080
 
 # Specify the command to run the app using Poetry
-# CMD ["poetry", "run", "streamlit", "run", "app.py", "--server.port=8080", "--server.address=0.0.0.0"]
 CMD ["poetry", "run", "uvicorn", "fastapi_app:app", "--host", "0.0.0.0", "--port", "8080"]
