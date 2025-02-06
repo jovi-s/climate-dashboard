@@ -10,11 +10,6 @@ View climate change statistics around your location.
 
 3. `make app`
 
-## Deployment Steps
-
-1. Cloud Build - Creates a Docker image and pushes it to Google Container Registry.
-2. Cloud Run - Deploys the Docker image to Google Cloud Run.
-
 ## Resources
 
 - [Climate Lab Book 2018 Visualisation Update](https://www.climate-lab-book.ac.uk/2018/2018-visualisation-update/)
@@ -29,6 +24,9 @@ View climate change statistics around your location.
 - [Healthy-NDCs-Scorecard_2023-Report.pdf](https://climateandhealthalliance.org/wp-content/uploads/2023/05/Healthy-NDCs-Scorecard_2023-Report.pdf)
 
 ## Deployment
+
+1. Cloud Build - Creates a Docker image and pushes it to Google Container Registry.
+2. Cloud Run - Deploys the Docker image to Google Cloud Run.
 
 ### Render
 
@@ -45,17 +43,30 @@ View climate change statistics around your location.
     3. `docker build ...`
     4. `docker tag ?? us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images climate-crisis-app:latest`
     5. `docker push us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest`
-    6. us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest
     6. service account username: python-backend@climate-dashboard-docker-image.iam.gserviceaccount.com
     7. docker username: oauth2accesstoken
     8. PAT: gcloud auth print-access-token
 
-4. Pull
+4. Pull - After Auth!
     1. `docker pull us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest`
 
 Render:
 Starter	$7/month	512 MB RAM	0.5 CPU
 NEED 1GB RAM!
+
+### Railway.app
+
+Builds container from image:
+1. Using github actions workflows - push to github! 
+2. -> build local and push to github!
+
+#### Github Container registry
+
+```
+export CR_PAT=YOUR_TOKEN
+echo $CR_PAT | docker login ghcr.io -u jovi-s --password-stdin
+```
+Login Succeeded!
 
 ### Fly.io <archived>
 
