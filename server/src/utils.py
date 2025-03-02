@@ -115,16 +115,17 @@ def fetch_and_extract_href(url):
 # https://unfccc.int/first-biennial-transparency-reports
 ndc_tracker_data = {
     "Singapore": {"ndc_count": 2, "btr_submitted": 1},
-    "Malaysia": {"ndc_count": 2, "btr_submitted": 1},
-    "Indonesia": {"ndc_count": 2, "btr_submitted": 1},
-    "Vietnam": {"ndc_count": 2, "btr_submitted": 0},
-    "Thailand": {"ndc_count": 2, "btr_submitted": 1},
+    "Malaysia": {"ndc_count": 1.5, "btr_submitted": 1},
+    "Indonesia": {"ndc_count": 1, "btr_submitted": 1},
+    "Vietnam": {"ndc_count": 1.5, "btr_submitted": 0},
+    "Thailand": {"ndc_count": 1.5, "btr_submitted": 1},
     "Philippines": {"ndc_count": 1, "btr_submitted": 0},
-    "Myanmar": {"ndc_count": 2, "btr_submitted": 0},
-    "Cambodia": {"ndc_count": 2, "btr_submitted": 1},
-    "Laos": {"ndc_count": 2, "btr_submitted": 0},
+    "Myanmar": {"ndc_count": 1.5, "btr_submitted": 0},
+    "Cambodia": {"ndc_count": 1.5, "btr_submitted": 1},
+    "Laos": {"ndc_count": 1.5, "btr_submitted": 0},
     "Brunei": {"ndc_count": 1, "btr_submitted": 1},
-    "Timor-Leste": {"ndc_count": 2, "btr_submitted": 0},
+    "Timor-Leste": {"ndc_count": 1.5, "btr_submitted": 0},
     # Add more countries as needed.
 }
-# Accurate as of 2025-02-02
+# Accurate as of 2025-03-02
+# 1.5 means the country has submitted an update to its first NDC.

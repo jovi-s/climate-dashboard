@@ -10,6 +10,8 @@ matplotlib.use(
     "Agg"
 )  # force Matplotlib to use a backend that does not attempt to draw on the screen
 
+from asyncio import Lock
+from contextlib import asynccontextmanager
 from io import BytesIO
 from typing import Dict, List
 
@@ -20,7 +22,8 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
 from src.btr import btr_rag
-from src.ndc_inference import multi_document_agents
+from src.ndc_inference import init_ndc_comparison_agents, load_ndc_data
+from src.news_sentiment import OverallClimateNewsSentimentAnalyzer
 from src.plot_graphs import (
     global_temperature_anomaly,
     plot_co2_data,
@@ -29,15 +32,6 @@ from src.plot_graphs import (
 )
 from src.utils import fetch_and_extract_href, fetch_global_data, ndc_tracker_data
 
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
-    allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
-)
 
 # Load the YAML configuration file
 with open("./src/config.yaml", "r") as file:
@@ -53,8 +47,8 @@ class BTRRAGAgent:
     def query(self, prompt):
         return str(self.btr_rag_agent.query(prompt))
 
-
 # Global variable for the vector store engine
+btr_lock = Lock()
 btr_query_engine = None
 
 
@@ -65,6 +59,25 @@ class ClientMessage(BaseModel):
 
 class Request(BaseModel):
     messages: List[ClientMessage]
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logging.info("Loading NDC data at startup...")
+    load_ndc_data()
+    logging.info("NDC data loaded successfully.")
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
 
 
 @app.get("/")
@@ -99,9 +112,10 @@ def get_ndc_comparison(selected_countries: str):
     ]
     if len(countries_list) >= 2:
         logging.info(f"Comparing NDCs of countries: {countries_list}")
-        top_agent = multi_document_agents()
+        top_agent = init_ndc_comparison_agents(countries_list)
         prompt = f"Compare the features of the NDCs of these countries: {tuple(countries_list)}"
-        return {"text": str(top_agent.query(prompt))}
+        response = top_agent.query(prompt)
+        return {"text": str(response)}
     else:
         raise HTTPException(
             status_code=400, detail="Please provide at least 2 selected countries."
@@ -117,20 +131,20 @@ def get_ndc_tracker():
 
 
 @app.get("/api/initialize-btr-rag")
-def initialize_btr_rag(btr_rag_country: str):
+async def initialize_btr_rag(btr_rag_country: str):
     """Endpoint to initialize the BTR RAG agent for a specific country.
     To run this in your browser, use the following URL:
     http://127.0.0.1:8000/api/initialize-btr-rag?btr_rag_country=Singapore
     """
     global btr_query_engine
-    if btr_query_engine is not None:
-        # print(f"BTR RAG agent already initialized for country: {btr_rag_country}")
-        return {"message": f"BTR RAG agent already initialized for {btr_rag_country}"}
+    async with btr_lock:  # Ensures only one request initializes at a time
+        if btr_query_engine is not None:
+            return {
+                "message": f"BTR RAG agent already initialized for {btr_rag_country}"
+            }
 
-    # Initialize and store the agent for the specified country
-    btr_query_engine = BTRRAGAgent(btr_rag_country)
-    # print(f"BTR RAG agent initialized for country: {btr_rag_country}")
-    return {"message": f"BTR RAG agent initialized for {btr_rag_country}"}
+        btr_query_engine = BTRRAGAgent(btr_rag_country)
+        return {"message": f"BTR RAG agent initialized for {btr_rag_country}"}
 
 
 @app.post("/api/btr-chat")
@@ -259,3 +273,16 @@ def get_image_links():
 
     json_data = transform_yaml_to_json(config.copy())
     return json_data
+
+
+@app.get("/api/news-sentiment")
+def get_news_sentiment():
+    """Endpoint to retrieve news sentiment data.
+    How to use:
+    http://127.0.0.1:8000/api/news-sentiment
+    """
+    analyzer = OverallClimateNewsSentimentAnalyzer(
+        query="climate change, global warming", max_articles=20
+    )
+    report = analyzer.run()
+    return {"report": report}

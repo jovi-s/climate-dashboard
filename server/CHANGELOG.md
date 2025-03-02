@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Options are: Added, Changed, Removed, Fixed.
 
+## [0.1.1] - 2025-03-03
+
+## Added
+
+- Singapore NDC 2
+- News Sentiment Report Generation Script + Endpoint Route
+- New Images (CO2 Climb, Hottest Years)
+- Hardcode link to Singapore BTR 
+
+## Changed
+
+- Update Climate Spiral GIF
+
 ## [0.1.0] - 2025-02-02
 
 ### Added

@@ -1,4 +1,7 @@
 # import streamlit as st
+import logging
+import os
+
 from dotenv import load_dotenv
 from llama_index.agent.openai import OpenAIAgent
 from llama_index.core import (
@@ -15,22 +18,32 @@ from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
 
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+
 # Load environment variables from .env file
 load_dotenv()
 
+# Get LLM_MODEL from the environment variables
+llm_model = os.getenv("LLM_MODEL")
+embed_model = os.getenv("EMBEDDING_MODEL")
 
-def multi_document_agents():
-    """NDCs from: https://unfccc.int/NDCREG
+
+# Global variables to store agents and query engines
+agents = {}
+query_engines = {}
+
+
+def load_ndc_data():
+    """Load NDC data and initialize agents and query engines.
+    NDCs from: https://unfccc.int/NDCREG
     Code Adapted from: https://docs.llamaindex.ai/en/stable/examples/agent/multi_document_agents/
     """
-    Settings.llm = OpenAI(temperature=0, model="gpt-4o-mini")
-    Settings.embed_model = OpenAIEmbedding(model="text-embedding-3-small")
+    global agents, query_engines
+    Settings.llm = OpenAI(temperature=0, model=llm_model)
+    Settings.embed_model = OpenAIEmbedding(model=embed_model)
 
     node_parser = SentenceSplitter()
-
-    # Build agents dictionary
-    agents = {}
-    query_engines = {}
 
     ndc_file_name_path_mapping = {
         "Brunei": "data/ndc/Brunei Darussalam's NDC 2020.pdf",
@@ -39,8 +52,10 @@ def multi_document_agents():
         "Laos": "data/ndc/NDC 2020 of Lao PDR (English), 09 April 2021 (1).pdf",
         "Malaysia": "data/ndc/Malaysia NDC Updated Submission to UNFCCC July 2021 final.pdf",
         "Myanmar": "data/ndc/Myanmar Updated  NDC July 2021.pdf",
-        "Singapore": "data/ndc/Singapore Second Update of First NDC.pdf",
+        "Singapore": "data/ndc/Singapore_Second_Nationally_Determined_Contribution.pdf",
         "Vietnam": "data/ndc/Viet Nam NDC 2022 Update.pdf",
+        "Thailand": "data/ndc/Thailand 2nd Updated NDC.pdf",
+        "Philippines": "data/ndc/Philippines - NDC.pdf",
     }
 
     sea_countries = list(ndc_file_name_path_mapping.keys())
@@ -94,7 +109,7 @@ def multi_document_agents():
         ]
 
         # build agent
-        function_llm = OpenAI(model="gpt-4o-mini")
+        function_llm = OpenAI(model=llm_model)
         agent = OpenAIAgent.from_tools(
             query_engine_tools,
             llm=function_llm,
@@ -106,23 +121,34 @@ def multi_document_agents():
         )
 
         agents[country] = agent
+        logging.info(f"Agent for {country} added.")
         query_engines[country] = vector_index.as_query_engine(similarity_top_k=2)
+        logging.info(f"Query engine for {country} added.")
+
+
+def init_ndc_comparison_agents(selected_countries):
+    global agents, query_engines
+    """Query the NDC agents for the selected countries."""
+    # Ensure the data is loaded
+    # if not agents or not query_engines:
+    #     load_ndc_data()
 
     # define tool for each document agent
     all_tools = []
-    for country in sea_countries:
-        country_summary = (
-            f"This content contains Nationally Determined Contributions for {country}. Use"
-            f" this tool if you want to answer any questions about {country}.\n"
-        )
-        doc_tool = QueryEngineTool(
-            query_engine=agents[country],
-            metadata=ToolMetadata(
-                name=f"tool_{country}",
-                description=country_summary,
-            ),
-        )
-        all_tools.append(doc_tool)
+    for country in selected_countries:
+        if country in agents:
+            country_summary = (
+                f"This content contains Nationally Determined Contribution for {country}. Use"
+                f" this tool if you want to answer any questions about {country}.\n"
+            )
+            doc_tool = QueryEngineTool(
+                query_engine=agents[country],
+                metadata=ToolMetadata(
+                    name=f"tool_{country}",
+                    description=country_summary,
+                ),
+            )
+            all_tools.append(doc_tool)
 
     # define an "object" index and retriever over these tools
     obj_index = ObjectIndex.from_objects(
@@ -133,7 +159,7 @@ def multi_document_agents():
     top_agent = OpenAIAgent.from_tools(
         tool_retriever=obj_index.as_retriever(similarity_top_k=3),
         system_prompt=""" \
-You are an agent designed to answer queries about a set of given South East Asia countries.
+You are an agent designed to answer queries about a set of given countries Nationally Determined Contributions.
 Please always use the tools provided to answer a question. Do not rely on prior knowledge.""",
         verbose=True,
     )

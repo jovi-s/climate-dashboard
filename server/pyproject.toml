@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "climate-dashboard"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Jovinder Singh <jovinder@yahoo.com>"]
 readme = "README.md"
@@ -28,6 +28,7 @@ sentence-transformers = "^3.4.1"
 
 # Development dependencies are packages that are needed for development
 # purposes but are not required for the production environment
+duckduckgo-search = "^7.5.0"
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.5"
 
