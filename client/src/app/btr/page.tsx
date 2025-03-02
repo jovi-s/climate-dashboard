@@ -131,7 +131,7 @@ export default function BTR() {
             rel="noopener noreferrer"
             className="text-blue-600 underline"
           >
-            Click here to view Singapore's complete BTR
+            Click here to view Singapore&apos;s complete BTR
           </a>
         </div>
 

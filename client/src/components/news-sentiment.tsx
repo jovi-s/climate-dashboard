@@ -24,8 +24,12 @@ export default function NewsSentiment() {
                 }
                 const data = await response.json();
                 setNewsData(data.report);
-            } catch (err) {
-                setError(err.message);
+            } catch (err: unknown) { // Specify the type of err as unknown
+                if (err instanceof Error) { // Check if err is an instance of Error
+                    setError(err.message);
+                } else {
+                    setError("An unknown error occurred"); // Handle unexpected error types
+                }
             } finally {
                 setLoading(false);
             }
