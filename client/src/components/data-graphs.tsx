@@ -26,27 +26,6 @@ export default function GraphSection() {
   // State to manage the enlarged image (if any)
   const [enlargedImage, setEnlargedImage] = useState<{ src: string; alt: string } | null>(null);
 
-//   useEffect(() => {
-//     // Helper function to fetch the graph data
-//     async function fetchGraph(
-//       endpoint: string,
-//       setImage: (src: string) => void,
-//       setSource: (src: string) => void
-//     ): Promise<void> {
-//       try {
-//         const res = await fetch(endpoint);
-//         if (!res.ok) {
-//           throw new Error(`Failed to fetch ${endpoint}`);
-//         }
-//         const data = await res.json();
-//         const dataURL = `data:image/png;base64,${data.image}`;
-//         setImage(dataURL);
-//         setSource(data.source);
-//       } catch (err) {
-//         console.error(err);
-//       }
-//     }
-
     useEffect(() => {
     // A helper function that fetches an endpoint using Promise chains.
     function fetchGraph(
@@ -80,7 +59,7 @@ export default function GraphSection() {
 
   return (
     <section id="graphs" className="p-8 sm:p-20 bg-white">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">Graphs</h2>
+      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">Charts</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {co2Src ? (
           <Card>
@@ -97,12 +76,6 @@ export default function GraphSection() {
                 onClick={() => setEnlargedImage({ src: co2Src, alt: "CO2 Graph" })}
                 style={{ cursor: "pointer" }}
               />
-              {/* <img 
-                src={co2Src} 
-                alt="CO2 Graph" 
-                onClick={() => setEnlargedImage({ src: co2Src, alt: "CO2 Graph" })} 
-                style={{ cursor: "pointer" }} 
-              /> */}
               <p className="text-xs text-center mt-2">{co2Source}</p>
             </CardContent>
           </Card>

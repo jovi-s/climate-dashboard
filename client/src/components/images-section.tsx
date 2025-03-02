@@ -47,6 +47,7 @@ const ClimateImages = () => {
 
   return (
     <div className="p-4">
+      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-8">Online Images</h2>
       {Object.entries(images).map(([category, images]) => (
         <div key={category} className="mb-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">

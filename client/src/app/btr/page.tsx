@@ -13,11 +13,12 @@ import {
 } from "@/components/ui/select";
 import { Chat } from "@/components/chat";
 import { Button } from "@/components/ui/button";
-
+import { Spinner } from '@/components/ui/spinner';
 
 export default function BTR() {
   const [selectedCountry, setSelectedCountry] = useState("Singapore");
   const [initialized, setInitialized] = useState(false);
+  const [loading, setLoading] = useState(false); // New loading state
 
   const countries = [
     "Singapore",
@@ -35,6 +36,8 @@ export default function BTR() {
   const handleInitialize = async () => {
     if (!selectedCountry) return;
 
+    setLoading(true); // Set loading to true when starting the initialization
+
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_PYTHON_BACKEND}/api/initialize-btr-rag?btr_rag_country=${encodeURIComponent(
@@ -50,10 +53,10 @@ export default function BTR() {
       const data = await res.json();
       console.log(data.message);
       setInitialized(true);
-      // Optionally clear previous chat messages when switching countries.
-      // setMessages([]);
     } catch (error) {
       console.error("Error initializing BTR RAG agent:", error);
+    } finally {
+      setLoading(false); // Set loading to false when done
     }
   };
 
@@ -106,12 +109,30 @@ export default function BTR() {
             </SelectContent>
           </Select>
           <Button
-            onClick={handleInitialize}
-            disabled={!selectedCountry || initialized}
+            onClick={async () => {
+              setInitialized(false); // Reset initialization state
+              await handleInitialize(); // Wait for the initialization to complete
+            }}
+            disabled={!selectedCountry || initialized || loading} // Disable if loading
             className="ml-4"
           >
             {initialized ? "Pipeline Initialized!" : "Click here to load report!"}
           </Button>
+          {loading && ( // Show spinner when loading
+            <div className="ml-2 inline-block">
+              <Spinner />
+            </div>
+          )}
+
+          <div className="ml-10" />
+          <a
+            href="https://www.nccs.gov.sg/files/docs/default-source/publications/Singapore_s_First_Biennial_Transparency_Report_2024__LR_.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 underline"
+          >
+            Click here to view Singapore's complete BTR
+          </a>
         </div>
 
         <Chat />

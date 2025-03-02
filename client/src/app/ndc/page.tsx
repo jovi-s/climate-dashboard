@@ -74,6 +74,7 @@ function SkeletonCard() {
 export default function NDCs() {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [summary, setSummary] = useState("Loading...");
+  const [summary2, setSummary2] = useState("Loading...");
   const [apiText, setApiText] = useState(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("apiText") || "";
@@ -91,6 +92,8 @@ export default function NDCs() {
     "Vietnam",
     "Malaysia",
     "Indonesia",
+    "Thailand",
+    "Philippines"
   ];
 
   // Fetch the summary text when the component mounts
@@ -104,6 +107,18 @@ export default function NDCs() {
       })
       .then((data) => setSummary(data))
       .catch(() => setSummary("Failed to load summary."));
+  }, []);
+
+  useEffect(() => {
+    fetch("/assets/Singapore_2NDC_Summary.txt")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((data) => setSummary2(data))
+      .catch(() => setSummary2("Failed to load summary."));
   }, []);
 
   // Handler for running the analysis on button click
@@ -149,7 +164,29 @@ export default function NDCs() {
             AI analysis of UNFCCC Nationally Determined Contributions (NDCs)
           </h2>
           <p>
-            View an AI-generated summary of Singapore&apos;s NDC (2022). For more
+            View an AI-generated summary of Singapore&apos;s <strong>2nd NDC (2025)</strong>. For more
+            details, refer to the official document{" "}
+            <a
+              href="https://www.nccs.gov.sg/files/docs/default-source/news-documents/Singapore_Second_Nationally_Determined_Contribution.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              here
+            </a>
+            .
+          </p>
+          <details className="border border-gray-300 p-4 rounded-lg">
+            <summary className="cursor-pointer text-blue-600 font-medium">
+              <span>Click here to expand</span>
+            </summary>
+            <div className="prose prose-lg max-w-none mt-4">
+              <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                {summary2}
+              </ReactMarkdown>
+            </div>
+          </details>
+          <p>
+            View an AI-generated summary of Singapore&apos;s <strong>2nd Update of its 1st NDC (2022)</strong>. For more
             details, refer to the official document{" "}
             <a
               href="https://unfccc.int/sites/default/files/NDC/2022-11/Singapore%20Second%20Update%20of%20First%20NDC.pdf"

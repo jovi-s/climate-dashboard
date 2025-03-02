@@ -97,7 +97,7 @@ export default function NDCTracker() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Bar Chart for NDC Submissions */}
       <Card>
-      <p className="text-gray-700 mb-4 text-sm">Nationally Determined Contributions, or NDCs, are national climate action plans by each country under the Paris Agreement.</p>
+      <p className="text-gray-700 mb-4 text-sm">Nationally Determined Contributions (NDCs), are national climate action plans by each country under the Paris Agreement.</p>
         <CardHeader>
           <CardTitle>NDC Submissions by SEA Country</CardTitle>
           <CardDescription>Overview</CardDescription>
@@ -154,7 +154,7 @@ export default function NDCTracker() {
       <CardFooter className="flex-col gap-2 text-sm">
             <div>
                 <ul>
-                    <li>The NDCs to be submitted in 2025, also known as NDCs 3.0, are to be informed by the outcome of the first global stocktake.</li>
+                    <li>The NDCs to be submitted in 2025, aka NDCs 3.0, are to be informed by the outcome of the first global stocktake (2023).</li>
                 </ul>
             </div>
       </CardFooter>

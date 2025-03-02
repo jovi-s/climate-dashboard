@@ -3,6 +3,7 @@
 import Hero from "@/components/Hero";
 import ClimateImages from "@/components/images-section";
 import GraphSection from "@/components/data-graphs";
+import NewsSentiment from "@/components/news-sentiment";
 
 
 export default function Home() {
@@ -32,6 +33,7 @@ export default function Home() {
         backgroundImage="/assets/PHOTO-Climate-Collage-Soft-NOAA-Communications-NO-NOAA-Logo-HOMEPAGE.jpg"
       />
       <GraphSection />
+      <NewsSentiment />
       <ClimateImages />
     </div>
   );

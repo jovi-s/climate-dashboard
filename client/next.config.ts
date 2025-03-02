@@ -24,6 +24,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "www.esa.int",
       },
+      {
+        protocol: "https",
+        hostname: "showyourstripes.info",
+      },
     ],
   },
   output: "standalone",
