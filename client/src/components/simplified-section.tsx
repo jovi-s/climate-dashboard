@@ -1,4 +1,5 @@
 import type * as React from "react"
+import Image from "next/image"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { FileText, BarChart2, Globe, Lightbulb } from "lucide-react"
 
@@ -14,7 +15,7 @@ const SimplifiedSection: React.FC = () => {
           <CardHeader className="pb-4">
             <CardTitle className="text-2xl">Climate Data Guide</CardTitle>
             <CardDescription>
-              Welcome to our climate dashboard! We know some of the charts and data points can feel technical, so here's
+              Welcome to our climate dashboard! We know some of the charts and data points can feel technical, so here&apos;s
               a guide to help you make sense of them. The charts and images can be found by scrolling down the page.
             </CardDescription>
           </CardHeader>
@@ -76,10 +77,12 @@ const SimplifiedSection: React.FC = () => {
                   <div>
                     <h3 className="text-lg font-semibold">UNFCCC Conference of the Parties (COP)</h3>
                     <div className="mt-2">
-                      <img
-                        src="assets/cop-cycle.png"
+                      <Image
+                        src="/assets/cop-cycle.png"
                         alt="Cyclical Processes of COP"
                         className="mx-auto my-4 max-w-full h-auto rounded-lg shadow-sm"
+                        width={500}
+                        height={300}
                       />
                       <p className="leading-relaxed">
                         The COP implements key processes to keep global climate efforts on track. The{" "}
