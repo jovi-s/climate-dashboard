@@ -25,7 +25,6 @@ interface NavProps {
   }[];
 }
 
-
 function ModeToggle() {
   const { setTheme } = useTheme()
 
@@ -52,7 +51,6 @@ function ModeToggle() {
     </DropdownMenu>
   )
 }
-
 
 function MobileItems(props: NavProps) {
   return (
@@ -89,7 +87,7 @@ function DesktopItems(props: NavProps) {
           key={index}
           href={item.disabled ? "#" : item.href}
           className={cn(
-            "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
+            "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-lg",
             item.href.startsWith(`/${segment}`)
               ? "text-foreground"
               : "text-foreground/60",
@@ -113,9 +111,6 @@ export function LandingPageHeader(props: NavProps) {
       <div className="flex h-18 items-center justify-between py-4">
         <div className="flex items-center gap-4 md:gap-10">
           <Logo className="hidden md:flex" />
-
-          {props.items?.length ? <DesktopItems items={props.items} /> : null}
-
           <Button
             className="space-x-2 md:hidden"
             variant="ghost"
@@ -128,11 +123,11 @@ export function LandingPageHeader(props: NavProps) {
               <Menu className="h-6 w-6" />
             )}
           </Button>
-
           <Logo className="md:hidden" />
-
           {showMobileMenu && props.items && <MobileItems items={props.items} />}
         </div>
+
+        {props.items?.length ? <DesktopItems items={props.items} /> : null}
 
         <div className="flex gap-4 items-center">
           <ModeToggle />
