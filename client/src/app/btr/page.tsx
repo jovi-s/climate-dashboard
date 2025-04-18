@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import * as React from "react";
 import ReactMarkdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
+import { Loader2 } from "lucide-react"
 import {
   Select,
   SelectContent,
@@ -15,12 +16,11 @@ import {
 } from "@/components/ui/select";
 import { Chat } from "@/components/chat";
 import { Button } from "@/components/ui/button";
-import { Spinner } from '@/components/ui/spinner';
 
 export default function BTR() {
   const [selectedCountry, setSelectedCountry] = useState("Singapore");
   const [initialized, setInitialized] = useState(false);
-  const [loading, setLoading] = useState(false); // New loading state
+  const [loading, setLoading] = useState(false);
   const [summary, setSummary] = useState("Loading...")
 
   // Fetch the summary text when the component mounts
@@ -80,7 +80,7 @@ export default function BTR() {
     <section className="p-8 min-h-screen bg-white">
       <div className="mt-16 max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
-          AI Analysis of Singapore&apos;s Biennial Transparency Reports (BTR)
+          AI Analysis of Singapore&apos;s Biennial Transparency Report (BTR)
         </h2>
         <p className="text-gray-700 leading-relaxed">
           View an AI-generated summary of Singapore&apos;s <strong>2024 BTR</strong>. For more details, refer to
@@ -151,20 +151,22 @@ export default function BTR() {
               </SelectGroup>
             </SelectContent>
           </Select>
-          <Button
-            onClick={async () => {
-              setInitialized(false); // Reset initialization state
-              await handleInitialize(); // Wait for the initialization to complete
-            }}
-            disabled={!selectedCountry || initialized || loading} // Disable if loading
-            className="ml-4"
-          >
-            {initialized ? "Pipeline Initialized!" : "Click here to load report!"}
-          </Button>
-          {loading && ( // Show spinner when loading
-            <div className="ml-2 inline-block">
-              <Spinner />
-            </div>
+          {loading ? (
+            <Button disabled className="ml-4 bg-blue-600 hover:bg-blue-700">
+              <Loader2 className="animate-spin mr-2" />
+              Please wait
+            </Button>
+          ) : (
+            <Button 
+              onClick={async () => {
+                setInitialized(false); // Reset initialization state
+                await handleInitialize(); // Wait for the initialization to complete
+              }}
+              disabled={!selectedCountry || initialized} 
+              className="ml-4 bg-blue-600 hover:bg-blue-700 text-white"
+            >
+              {initialized ? "Pipeline Initialized!" : "Click here to load report!"}
+            </Button>
           )}
         </div>
         <Chat />
