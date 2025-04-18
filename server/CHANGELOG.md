@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Options are: Added, Changed, Removed, Fixed.
 
+## [0.1.4] - 2025-04-19
+
+## Added
+
+- Singapore BTR Summary
+- More search terms for DDG internet search
+
+## Changed
+
+- Updated Singapore's NDC Summary using gemini-2.5-pro
+- Moved NDC Tracker dict data from server/src/utils.py to front-end (ndc/page.tsx)
+- Reduced BTR Chatbot length from 110 -> 80
+- Changed BTR load button to blue and remove external spinner
+- Use async functions for FastAPI script
+
+## Removed
+
+- FastAPI endpoint for NDCTracker
+
+## [0.1.3] - 2025-04-06
+
+## Changed
+
+- Modify NDC UI using v0 template
+
+## [0.1.2] - 2025-04-03
+
+## Added
+
+- Add simplified section with cyclic COP process
+
+## Changed
+
+- Modify Homepage UI using v0 template
+
 ## [0.1.1] - 2025-03-03
 
 ## Added

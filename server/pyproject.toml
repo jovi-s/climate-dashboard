@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "climate-dashboard"
-version = "0.1.1"
-description = ""
+version = "0.1.4"
+description = "A Climate Crisis Dashboard"
 authors = ["Jovinder Singh <jovinder@yahoo.com>"]
 readme = "README.md"
 
