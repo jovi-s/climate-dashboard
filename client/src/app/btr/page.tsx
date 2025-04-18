@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import * as React from "react";
+import ReactMarkdown from "react-markdown"
+import rehypeRaw from "rehype-raw"
 import {
   Select,
   SelectContent,
@@ -19,6 +21,20 @@ export default function BTR() {
   const [selectedCountry, setSelectedCountry] = useState("Singapore");
   const [initialized, setInitialized] = useState(false);
   const [loading, setLoading] = useState(false); // New loading state
+  const [summary, setSummary] = useState("Loading...")
+
+  // Fetch the summary text when the component mounts
+  useEffect(() => {
+    fetch("/assets/Singapore_BTR_Summary.md")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok")
+        }
+        return response.text()
+      })
+      .then((data) => setSummary(data))
+      .catch(() => setSummary("Failed to load summary."))
+  }, [])
 
   const countries = [
     "Singapore",
@@ -63,9 +79,36 @@ export default function BTR() {
   return (
     <section className="p-8 min-h-screen bg-white">
       <div className="mt-16 max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">
-          AI Chatbot with UNFCCC Biennial Transparency Reports (BTR)
-        </h1>
+        <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
+          AI Analysis of Singapore&apos;s Biennial Transparency Reports (BTR)
+        </h2>
+        <p className="text-gray-700 leading-relaxed">
+          View an AI-generated summary of Singapore&apos;s <strong>2024 BTR</strong>. For more details, refer to
+          the official document{" "}
+          <a
+            href="https://www.nccs.gov.sg/files/docs/default-source/publications/Singapore_s_First_Biennial_Transparency_Report_2024__LR_.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:underline"
+          >
+            here
+          </a>
+          .
+        </p>
+        <details className="border border-gray-200 p-4 rounded-lg mt-4 shadow-sm">
+          <summary className="cursor-pointer text-blue-600 font-medium">
+            <span>Click here to expand</span>
+          </summary>
+          <div className="prose prose-blue max-w-none mt-4">
+            <ReactMarkdown rehypePlugins={[rehypeRaw]}>{summary}</ReactMarkdown>
+          </div>
+        </details>
+
+        <div className="mt-12">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6">
+            AI Chatbot with UNFCCC Biennial Transparency Reports (BTR)
+          </h1>
+        </div>
         <p className="text-gray-700 mb-6">
           Please find more information about BTRs{" "}
           <a
@@ -123,18 +166,7 @@ export default function BTR() {
               <Spinner />
             </div>
           )}
-
-          <div className="ml-10" />
-          <a
-            href="https://www.nccs.gov.sg/files/docs/default-source/publications/Singapore_s_First_Biennial_Transparency_Report_2024__LR_.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 underline"
-          >
-            Click here to view Singapore&apos;s complete BTR
-          </a>
         </div>
-
         <Chat />
       </div>
     </section>

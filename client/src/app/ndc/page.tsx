@@ -94,7 +94,7 @@ export default function NDCs() {
 
   // Fetch the summary text when the component mounts
   useEffect(() => {
-    fetch("/assets/SingaporeNDCSummary.txt")
+    fetch("/assets/Singapore_1NDC_2Update_Summary.md")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok")
@@ -106,7 +106,7 @@ export default function NDCs() {
   }, [])
 
   useEffect(() => {
-    fetch("/assets/Singapore_2NDC_Summary.txt")
+    fetch("/assets/Singapore_2NDC_Summary.md")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok")
