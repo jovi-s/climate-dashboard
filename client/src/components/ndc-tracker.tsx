@@ -46,34 +46,30 @@ type NDCData = {
   btr_submitted: number;
 };
 
+// https://unfccc.int/NDCREG
+// https://unfccc.int/first-biennial-transparency-reports
 type TrackerData = {
   [country: string]: NDCData;
 };
 
 export default function NDCTracker() {
-  const [trackerData, setTrackerData] = useState<TrackerData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    // Adjust the URL as needed (e.g., using environment variables)
-    fetch(`${process.env.NEXT_PUBLIC_PYTHON_BACKEND}/api/ndc-tracker`)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((data: TrackerData) => setTrackerData(data))
-      .catch((err) => setError(err.message));
-  }, []);
-
-  if (error) {
-    return <div>Error loading tracker data: {error}</div>;
-  }
-
-  if (!trackerData) {
-    return <div>Loading NDC Tracker...</div>;
-  }
+  // Use the TrackerData type directly without fetching from API
+  const trackerData: TrackerData = {
+    "Singapore": { ndc_count: 2, btr_submitted: 1 },
+    "Malaysia": { ndc_count: 1.5, btr_submitted: 1 },
+    "Vietnam": { ndc_count: 1.5, btr_submitted: 0 },
+    "Thailand": { ndc_count: 1.5, btr_submitted: 1 },    
+    "Myanmar": { ndc_count: 1.5, btr_submitted: 0 },
+    "Cambodia": { ndc_count: 1.5, btr_submitted: 1 },
+    "Laos": { ndc_count: 1.5, btr_submitted: 0 },
+    "Timor-Leste": { ndc_count: 1.5, btr_submitted: 0 },
+    "Indonesia": { ndc_count: 1, btr_submitted: 1 },
+    "Philippines": { ndc_count: 1, btr_submitted: 1 },
+    "Brunei": { ndc_count: 1, btr_submitted: 1 },
+  };
+  // Accurate as of 2025-04-19
+  // 1.5 means the country has submitted an update to its first NDC.
+  // 2 means the country has submitted its second NDC.
 
   // Prepare data for the NDC submissions bar chart.
   const ndcChartData = Object.entries(trackerData).map(([country, data]) => ({
