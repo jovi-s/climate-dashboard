@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, XAxis, YAxis } from "recharts"
 import { Label, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts"
 // import { Pie, PieChart, Sector } from "recharts";
