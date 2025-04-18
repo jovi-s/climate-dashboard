@@ -157,7 +157,7 @@ export default function NDCs() {
         </div>
         <div className="mb-12">
           <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
-            AI Analysis of UNFCCC Nationally Determined Contributions (NDCs)
+            AI Summarizations of Singapore&apos;s Nationally Determined Contributions (NDCs)
           </h2>
           <p className="text-gray-700 leading-relaxed">
             View an AI-generated summary of Singapore&apos;s <strong>2nd NDC (2025)</strong>. For more details, refer to
