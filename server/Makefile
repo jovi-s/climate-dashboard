@@ -2,8 +2,8 @@ install:
 	poetry install
 
 lint:
-	poetry run ruff check --fix --unsafe-fixes
-	poetry run ruff format .
+	poetry run ruff check --fix --unsafe-fixes src/
+	poetry run ruff format src/
 
 fastapi:
 	poetry run uvicorn fastapi_app:app --reload
@@ -14,7 +14,7 @@ local-build:
 local-run:
 	docker run -p 8080:8080 climate-crisis-app
 
-# Follow instructions in README for Github Container Reigstry before running
+# Follow instructions in README for Github Container Registry before running
 gcr:
 	docker build --no-cache --platform linux/amd64 . -t ghcr.io/jovi-s/climate-crisis-app:latest              
 	docker push ghcr.io/jovi-s/climate-crisis-app:latest

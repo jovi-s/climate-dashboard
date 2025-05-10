@@ -28,17 +28,11 @@ View climate change statistics around your location.
 1. Cloud Build - Creates a Docker image and pushes it to Google Container Registry.
 2. Cloud Run - Deploys the Docker image to Google Cloud Run.
 
-### Railway.app
-
-Builds container from image:
-1. Using github actions workflows - push to github! 
-2. -> build local and push to github!
-
-#### Github Container registry
+### Github Container registry
 
 1. 
 ```
-export CR_PAT=YOUR_TOKEN
+export CR_PAT=YOUR_TOKEN <token found in .env file>
 echo $CR_PAT | docker login ghcr.io -u jovi-s --password-stdin
 ```
 2. Login Succeeded!
@@ -46,7 +40,15 @@ echo $CR_PAT | docker login ghcr.io -u jovi-s --password-stdin
 4. https://github.com/jovi-s/climate-dashboard/pkgs/container/climate-crisis-app/versions
 5. Redeploy deployment in railway.com
 
-### Render
+### Railway.app
+
+Builds container from image:
+1. Using github actions workflows - push to github! 
+2. -> build local and push to github!
+
+### <archived-deployments>
+
+#### Render
 
 1. Using GitHub backed service doesn't contain data/ and models/ directories as these are not pushed to GitHub thus the server returns ERROR when fetching data
 2. https://render.com/docs/deploying-an-image
@@ -73,7 +75,7 @@ Starter	$7/month	512 MB RAM	0.5 CPU
 NEED 1GB RAM!
 
 
-### Fly.io <archived>
+#### Fly.io
 
 1. fly launch --wait-timeout 600
 2. fly apps restart <app name>

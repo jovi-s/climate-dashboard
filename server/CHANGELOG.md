@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Options are: Added, Changed, Removed, Fixed.
 
+## [0.1.5] - 2025-05-11
+
+### Added
+
+- Add typing.py
+- Add ruff.toml
+
+### Changed
+
+- Move BTR class to btr.py 
+
 ## [0.1.4] - 2025-04-19
 
 ## Added
@@ -18,7 +29,7 @@ Options are: Added, Changed, Removed, Fixed.
 
 - Updated Singapore's NDC Summary using gemini-2.5-pro
 - Moved NDC Tracker dict data from server/src/utils.py to front-end (ndc/page.tsx)
-- Reduced BTR Chatbot length from 110 -> 80
+- Reduced BTR Chatbot height from 110 -> 80
 - Changed BTR load button to blue and remove external spinner
 - Use async functions for FastAPI script
 
