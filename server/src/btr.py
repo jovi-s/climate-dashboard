@@ -1,56 +1,49 @@
 # import streamlit as st
+import os
+
 from dotenv import load_dotenv
 from llama_index.core import Settings, StorageContext, load_index_from_storage
 from llama_index.core.postprocessor import SentenceTransformerRerank
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.llms.openai import OpenAI
 
-# from llama_index.core.tools import QueryEngineTool
-# from llama_index.core.agent import ReActAgent
-
-
 # Load environment variables from .env file
 load_dotenv()
 
-
-def get_btr_pdf(base_link="https://unfccc.int/first-biennial-transparency-reports"):
-    pass
-
-
-def btr_rag(country="Singapore"):
-    """Code adapted from:
-    https://docs.llamaindex.ai/en/stable/examples/cookbooks/oreilly_course_cookbooks/Module-8/Advanced_RAG_with_LlamaParse/#llamaparse-pdf-reader-for-pdf-parsing
-    https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/SentenceTransformerRerank/
-    """
-
-    embed_model = OpenAIEmbedding(model="text-embedding-3-small")
-    llm = OpenAI(model="gpt-4o-mini")
-
-    Settings.llm = llm
-    Settings.embed_model = embed_model
-
-    recursive_index = load_index_from_storage(
-        StorageContext.from_defaults(persist_dir=f"./data/vector_store/btr/{country}"),
-    )
-
-    reranker = SentenceTransformerRerank(model="models/rerank", top_n=5)
-
-    recursive_query_engine = recursive_index.as_query_engine(
-        similarity_top_k=15, node_postprocessors=[reranker], verbose=True
-    )
-
-    return recursive_query_engine
-
-    # country_tool = QueryEngineTool.from_defaults(
-    #     recursive_query_engine,
-    #     name=f"{country}_BTR",
-    #     description=f"Provides information about a country's BTR which includes details on national inventory reports (NIR), progress towards NDCs, policies and measures, climate change impacts and adaptation, levels of financial, technology development and transfer and capacity-building support, capacity-building needs and areas of improvement. Ask natural-language questions about the BTR."
-    # )
-
-    # agent = ReActAgent.from_tools([country_tool], verbose=True, context="""
+# Get LLM_MODEL from the environment variables
+Settings.llm = OpenAI(temperature=0, model=os.getenv("LLM_MODEL"))
+Settings.embed_model = OpenAIEmbedding(model=os.getenv("EMBEDDING_MODEL"))
 
 
-# You are an agent designed to answer queries about a given country's Biennial Transparency Report (BTR).
-# Please always use the tool provided to answer a question. Do not rely on prior knowledge.
-# """)
-# return agent
+class BTRRAGAgent:
+    def __init__(self, country: str = "Singapore"):
+        self.country = country
+        self.btr_rag_agent = self.btr_rag_engine()
+
+    def get_btr_pdf(
+        self, base_link="https://unfccc.int/first-biennial-transparency-reports"
+    ):
+        pass
+
+    def btr_rag_engine(self):
+        """Code adapted from:
+        https://docs.llamaindex.ai/en/stable/examples/cookbooks/oreilly_course_cookbooks/Module-8/Advanced_RAG_with_LlamaParse/#llamaparse-pdf-reader-for-pdf-parsing
+        https://docs.llamaindex.ai/en/stable/examples/node_postprocessor/SentenceTransformerRerank/
+        """
+
+        recursive_index = load_index_from_storage(
+            StorageContext.from_defaults(
+                persist_dir=f"./data/vector_store/btr/{self.country}"
+            ),
+        )
+
+        reranker = SentenceTransformerRerank(model="models/rerank", top_n=5)
+
+        recursive_query_engine = recursive_index.as_query_engine(
+            similarity_top_k=15, node_postprocessors=[reranker], verbose=True
+        )
+
+        return recursive_query_engine
+
+    def query(self, prompt: str) -> str:
+        return str(self.btr_rag_agent.query(prompt))

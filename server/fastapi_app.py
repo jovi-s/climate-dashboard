@@ -5,7 +5,7 @@ import logging
 from asyncio import Lock
 from contextlib import asynccontextmanager
 from io import BytesIO
-from typing import Dict, List
+from typing import Dict
 
 import matplotlib
 import matplotlib.pyplot as plt
@@ -13,9 +13,8 @@ import yaml
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
-from pydantic import BaseModel
 
-from src.btr import btr_rag
+from src.btr import BTRRAGAgent
 from src.ndc_inference import init_ndc_comparison_agents, load_ndc_data
 from src.news_sentiment import OverallClimateNewsSentimentAnalyzer
 from src.plot_graphs import (
@@ -24,38 +23,25 @@ from src.plot_graphs import (
     plot_methane_data,
     plot_world_ocean_warming_1992,
 )
+from src.typing import Request
 from src.utils import fetch_and_extract_href, fetch_global_data
+
 
 # Configure Matplotlib to use a non-GUI backend
 matplotlib.use("Agg")
+
 
 # Load the YAML configuration file
 with open("./src/config.yaml", "r") as file:
     config = yaml.safe_load(file)
 
+
 co2_data, methane_data, temp_data, ocean_data = fetch_global_data(config)
-
-
-class BTRRAGAgent:
-    def __init__(self, country: str):
-        self.btr_rag_agent = btr_rag(country)
-
-    def query(self, prompt: str) -> str:
-        return str(self.btr_rag_agent.query(prompt))
 
 
 # Global variable for the vector store engine
 btr_lock = Lock()
 btr_query_engine = None
-
-
-class ClientMessage(BaseModel):
-    role: str
-    content: str
-
-
-class Request(BaseModel):
-    messages: List[ClientMessage]
 
 
 @asynccontextmanager
@@ -117,13 +103,14 @@ async def get_ndc_comparison(selected_countries: str):
 async def initialize_btr_rag(btr_rag_country: str):
     """Endpoint to initialize the BTR RAG agent for a specific country."""
     global btr_query_engine
+
     async with btr_lock:  # Ensures only one request initializes at a time
         if btr_query_engine is not None:
             return {
                 "message": f"BTR RAG agent already initialized for {btr_rag_country}"
             }
 
-        btr_query_engine = BTRRAGAgent(btr_rag_country)
+        btr_query_engine = BTRRAGAgent(country=btr_rag_country)
         return {"message": f"BTR RAG agent initialized for {btr_rag_country}"}
 
 
@@ -153,7 +140,7 @@ async def handle_chat_data(request: Request):
         chunk_size = 100
         for i in range(0, len(response_text), chunk_size):
             yield f"0:{json.dumps(response_text[i:i + chunk_size])}\n"
-            await asyncio.sleep(0.02)
+            await asyncio.sleep(0.01)
 
     response = StreamingResponse(simple_stream(), media_type="text/plain")
     response.headers["x-vercel-ai-data-stream"] = "v1"
