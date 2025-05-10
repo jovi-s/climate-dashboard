@@ -23,7 +23,11 @@ Settings.embed_model = OpenAIEmbedding(model=os.getenv("EMBEDDING_MODEL"))
 
 
 class OverallClimateNewsSentimentAnalyzer:
-    def __init__(self, query="climate change, global warming, greenhouse gas emissions", max_articles=5):
+    def __init__(
+        self,
+        query="climate change, global warming, greenhouse gas emissions",
+        max_articles=5,
+    ):
         self.query = query
         self.max_articles = max_articles
         self.articles = []
