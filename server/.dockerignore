@@ -1,11 +1,15 @@
 __pycache__/
 .ruff_cache/
+.streamlit/
 .venv/
 .vscode/
 notebooks/
 src/__pycache__/
-src/process_data.py
+.gcloudignore
 .gitignore
+app.py
 CHANGELOG.md
+CLAUDE.md
 Makefile
 README.md
+ruff.toml

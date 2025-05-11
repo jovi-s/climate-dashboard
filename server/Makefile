@@ -1,5 +1,5 @@
 install:
-	poetry install
+	poetry install --no-root
 
 lint:
 	poetry run ruff check --fix --unsafe-fixes src/
@@ -9,10 +9,10 @@ fastapi:
 	poetry run uvicorn fastapi_app:app --reload
 
 local-build:
-	docker build -t climate-crisis-app .
+	docker build --platform=linux/amd64 -t climate-crisis-app .
 
 local-run:
-	docker run -p 8080:8080 climate-crisis-app
+	docker run --platform=linux/amd64 --rm -p 8080:8080 climate-crisis-app
 
 # Follow instructions in README for Github Container Registry before running
 gcr:
