@@ -28,6 +28,7 @@ const documents = [
     readTime: "10 min read",
     lastUpdated: "2025-05-19",
     filename: "wmo_2024.md",
+    originalUrl: "https://wmo.int/publication-series/state-of-global-climate-2024",
   },
   {
     id: "wmo-report-2023",
@@ -38,6 +39,7 @@ const documents = [
     readTime: "10 min read",
     lastUpdated: "2024-03-19",
     filename: "wmo_2023.md",
+    originalUrl: "https://wmo.int/publication-series/state-of-global-climate-2023",
   },
   {
     id: "wmo-report-2022",
@@ -48,6 +50,7 @@ const documents = [
     readTime: "10 min read",
     lastUpdated: "2023-04-23",
     filename: "wmo_2022.md",
+    originalUrl: "https://wmo.int/publication-series/state-of-global-climate-2022",
   },
   {
     id: "wmo-report-2021",
@@ -58,6 +61,7 @@ const documents = [
     readTime: "10 min read",
     lastUpdated: "2022-05-18",
     filename: "wmo_2021.md",
+    originalUrl: "https://wmo.int/publication-series/state-of-global-climate-2021",
   },
   {
     id: "wmo-report-2020",
@@ -68,6 +72,7 @@ const documents = [
     readTime: "10 min read",
     lastUpdated: "2021-04-19",
     filename: "wmo_2020.md",
+    originalUrl: "https://wmo.int/publication-series/state-of-global-climate-2020",
   },
 ]
 
@@ -271,7 +276,7 @@ export default function DocumentsPage() {
             <CardTitle className="text-lg">Document Information</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
               <div>
                 <span className="font-medium text-gray-700">Last Updated:</span>
                 <div className="text-gray-600">{documents.find((d) => d.id === activeDocument)?.lastUpdated}</div>
@@ -283,6 +288,19 @@ export default function DocumentsPage() {
               <div>
                 <span className="font-medium text-gray-700">Category:</span>
                 <div className="text-gray-600">{documents.find((d) => d.id === activeDocument)?.category}</div>
+              </div>
+              <div>
+                <span className="font-medium text-gray-700">Original URL:</span>
+                <div>
+                  <a
+                  href={documents.find((d) => d.id === activeDocument)?.originalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-600 hover:underline"
+                  >
+                  View original report
+                  </a>
+                </div>
               </div>
             </div>
           </CardContent>
