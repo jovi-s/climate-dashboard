@@ -79,24 +79,24 @@ export default function BTR() {
   return (
     <section className="p-8 min-h-screen bg-background">
       <div className="mt-16 max-w-4xl mx-auto">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
+        <h2 className="text-2xl font-bold mb-4 text-foreground tracking-tight">
           AI Analysis of Singapore&apos;s Biennial Transparency Report (BTR)
         </h2>
-        <p className="text-gray-700 leading-relaxed">
+        <p className="text-foreground leading-relaxed">
           View an AI-generated summary of Singapore&apos;s <strong>2024 BTR</strong>. For more details, refer to
           the official document{" "}
           <a
             href="https://www.nccs.gov.sg/files/docs/default-source/publications/Singapore_s_First_Biennial_Transparency_Report_2024__LR_.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:underline"
+            className="text-primary hover:underline"
           >
             here
           </a>
           .
         </p>
-        <details className="border border-gray-200 p-4 rounded-lg mt-4 shadow-sm">
-          <summary className="cursor-pointer text-blue-600 font-medium">
+        <details className="border border-border p-4 rounded-lg mt-4 shadow-sm">
+          <summary className="cursor-pointer text-primary font-medium">
             <span>Click here to expand</span>
           </summary>
           <div className="prose prose-blue max-w-none mt-4">
@@ -105,17 +105,17 @@ export default function BTR() {
         </details>
 
         <div className="mt-12">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          <h1 className="text-3xl font-bold text-foreground mb-6">
             AI Chatbot with UNFCCC Biennial Transparency Reports (BTR)
           </h1>
         </div>
-        <p className="text-gray-700 mb-6">
+        <p className="text-foreground mb-6">
           Please find more information about BTRs{" "}
           <a
             href="https://unfccc.int/first-biennial-transparency-reports"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 underline"
+            className="text-primary underline"
           >
             here
           </a>
@@ -124,7 +124,7 @@ export default function BTR() {
 
         <label
           htmlFor="country-select"
-          className="block mb-2 font-medium text-gray-700"
+          className="block mb-2 font-medium text-foreground"
         >
           Select a country ⬇️ to chat with its BTR (Please load the report before commencing to chat)
         </label>
@@ -152,7 +152,7 @@ export default function BTR() {
             </SelectContent>
           </Select>
           {loading ? (
-            <Button disabled className="ml-4 bg-blue-600 hover:bg-blue-700">
+            <Button disabled className="ml-4 bg-primary text-primary-foreground hover:bg-primary/90">
               <Loader2 className="animate-spin mr-2" />
               Please wait
             </Button>
@@ -163,7 +163,7 @@ export default function BTR() {
                 await handleInitialize(); // Wait for the initialization to complete
               }}
               disabled={!selectedCountry || initialized} 
-              className="ml-4 bg-blue-600 hover:bg-blue-700 text-white"
+              className="ml-4 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               {initialized ? "Pipeline Initialized!" : "Click here to load report!"}
             </Button>
