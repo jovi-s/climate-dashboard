@@ -112,11 +112,11 @@ export default function GraphSection() {
                         onClick={() => setEnlargedImage({ src: item.src!, alt: item.alt })}
                       />
                     </div>
-                    <p className="text-xs text-center mt-2 text-gray-500">{item.source}</p>
+                    <p className="text-xs text-center mt-2 text-muted-foreground">{item.source}</p>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center h-48 bg-gray-100 rounded-lg">
-                    <p className="text-gray-500">{item.loading}</p>
+                  <div className="flex items-center justify-center h-48 bg-muted rounded-lg">
+                    <p className="text-muted-foreground">{item.loading}</p>
                   </div>
                 )}
               </CardContent>
