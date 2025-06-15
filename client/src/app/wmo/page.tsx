@@ -128,7 +128,7 @@ export default function DocumentsPage() {
   )
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+    <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 text-white">
         <div className="container px-4 md:px-6 mx-auto">
