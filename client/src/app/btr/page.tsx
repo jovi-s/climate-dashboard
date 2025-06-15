@@ -77,7 +77,7 @@ export default function BTR() {
   };
 
   return (
-    <section className="p-8 min-h-screen bg-white">
+    <section className="p-8 min-h-screen bg-background">
       <div className="mt-16 max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
           AI Analysis of Singapore&apos;s Biennial Transparency Report (BTR)

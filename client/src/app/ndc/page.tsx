@@ -150,7 +150,7 @@ export default function NDCs() {
   }
 
   return (
-    <section className="p-8 min-h-screen bg-white">
+    <section className="p-8 min-h-screen bg-background">
       <div className="mt-16 max-w-4xl mx-auto">
         <div className="mb-12">
           <NDCTracker />
