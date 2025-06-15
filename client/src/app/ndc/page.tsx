@@ -156,61 +156,61 @@ export default function NDCs() {
           <NDCTracker />
         </div>
         <div className="mb-12">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">
+          <h2 className="text-2xl font-bold mb-4 text-foreground tracking-tight">
             AI Summarizations of Singapore&apos;s Nationally Determined Contributions (NDCs)
           </h2>
-          <p className="text-gray-700 leading-relaxed">
+          <p className="text-muted-foreground leading-relaxed">
             View an AI-generated summary of Singapore&apos;s <strong>2nd NDC (2025)</strong>. For more details, refer to
             the official document{" "}
             <a
               href="https://www.nccs.gov.sg/files/docs/default-source/news-documents/Singapore_Second_Nationally_Determined_Contribution.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-primary hover:underline dark:text-primary"
             >
               here
             </a>
             .
           </p>
-          <details className="border border-gray-200 p-4 rounded-lg mt-4 shadow-sm">
-            <summary className="cursor-pointer text-blue-600 font-medium">
+          <details className="border border-border p-4 rounded-lg mt-4 shadow-sm">
+            <summary className="cursor-pointer text-primary font-medium dark:text-primary">
               <span>Click here to expand</span>
             </summary>
-            <div className="prose prose-blue max-w-none mt-4">
+            <div className="prose max-w-none mt-4">
               <ReactMarkdown rehypePlugins={[rehypeRaw]}>{summary2}</ReactMarkdown>
             </div>
           </details>
-          <p className="text-gray-700 leading-relaxed mt-6">
+          <p className="text-muted-foreground leading-relaxed mt-6">
             View an AI-generated summary of Singapore&apos;s <strong>2nd Update of its 1st NDC (2022)</strong>. For more
             details, refer to the official document{" "}
             <a
               href="https://unfccc.int/sites/default/files/NDC/2022-11/Singapore%20Second%20Update%20of%20First%20NDC.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-primary hover:underline dark:text-primary"
             >
               here
             </a>
             .
           </p>
-          <details className="border border-gray-200 p-4 rounded-lg mt-4 shadow-sm">
-            <summary className="cursor-pointer text-blue-600 font-medium">
+          <details className="border border-border p-4 rounded-lg mt-4 shadow-sm">
+            <summary className="cursor-pointer text-primary font-medium dark:text-primary">
               <span>Click here to expand</span>
             </summary>
-            <div className="prose prose-blue max-w-none mt-4">
+            <div className="prose max-w-none mt-4">
               <ReactMarkdown rehypePlugins={[rehypeRaw]}>{summary}</ReactMarkdown>
             </div>
           </details>
         </div>
 
         <div className="mt-16 max-w-4xl mx-auto">
-          <h2 className="text-2xl font-bold mb-4 text-gray-800 tracking-tight">An AI comparative analysis of NDCs</h2>
-          <p className="text-gray-700 mb-6 leading-relaxed">
+          <h2 className="text-2xl font-bold mb-4 text-foreground tracking-tight">An AI comparative analysis of NDCs</h2>
+          <p className="text-muted-foreground mb-6 leading-relaxed">
             This section performs a comparative analysis of NDCs of countries in the South East Asia (SEA) region using
             generative AI. Countries available for NDC analysis:
             <strong> Cambodia, Myanmar, Laos, Singapore, Brunei, Vietnam, Malaysia, Indonesia</strong>.
           </p>
-          <label htmlFor="country-select" className="block mb-2 font-medium text-gray-700">
+          <label htmlFor="country-select" className="block mb-2 font-medium text-muted-foreground">
             Select at least 2 SEA countries to compare their NDCs:
           </label>
           <div className="max-w-4xl mx-auto">
@@ -220,12 +220,12 @@ export default function NDCs() {
           {/* Button section: Conditionally render the button based on the loading state */}
           <div className="mt-4">
             {isLoading ? (
-              <Button disabled className="bg-blue-600 hover:bg-blue-700">
+              <Button disabled className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 <Loader2 className="animate-spin mr-2" />
                 Please wait
               </Button>
             ) : (
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white" onClick={handleRunAnalysis}>
+              <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" onClick={handleRunAnalysis}>
                 Click here to run analysis!
               </Button>
             )}
@@ -236,8 +236,8 @@ export default function NDCs() {
             {isLoading ? (
               <SkeletonCard />
             ) : (
-              <Card className="mb-7 flex min-h-[564px] w-full min-w-fit rounded-lg border-none shadow-md px-5 py-4 font-medium">
-                <ReactMarkdown className="prose prose-blue max-w-none">
+              <Card className="mb-7 flex min-h-[564px] w-full min-w-fit rounded-lg border-none shadow-md px-5 py-4 font-medium bg-card text-card-foreground">
+                <ReactMarkdown className="prose max-w-none">
                   {apiText ? apiText : "AI generated response will appear here..."}
                 </ReactMarkdown>
               </Card>
@@ -246,7 +246,7 @@ export default function NDCs() {
           <div className="flex justify-end">
             <Button
               variant="outline"
-              className="border-gray-200 hover:bg-gray-50 text-gray-700"
+              className="border-border hover:bg-muted text-muted-foreground"
               onClick={() => setApiText("")}
             >
               Clear AI Response

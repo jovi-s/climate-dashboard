@@ -93,7 +93,7 @@ export default function NDCTracker() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {/* Bar Chart for NDC Submissions */}
       <Card>
-      <p className="text-gray-700 mb-4 text-sm">Nationally Determined Contributions (NDCs), are national climate action plans by each country under the Paris Agreement.</p>
+      <p className="mb-4 text-sm">Nationally Determined Contributions (NDCs), are national climate action plans by each country under the Paris Agreement.</p>
         <CardHeader>
           <CardTitle>NDC Submissions by SEA Country</CardTitle>
           <CardDescription>Overview</CardDescription>
@@ -158,7 +158,7 @@ export default function NDCTracker() {
 
       {/* Pie Chart for BTR Status */}
       <Card>
-      <p className="text-gray-700 mb-4 text-sm">Under the Enhanced Transparency Framework, Parties to the Paris Agreement must submit BTRs biennially, starting by 31 Dec 2024.</p>
+      <p className="mb-4 text-sm">Under the Enhanced Transparency Framework, Parties to the Paris Agreement must submit BTRs biennially, starting by 31 Dec 2024.</p>
         <CardHeader>
           <CardTitle>BTR Status by SEA Countries</CardTitle>
           <CardDescription>Biennial Transparency Reports (BTR) Submission Overview</CardDescription>
