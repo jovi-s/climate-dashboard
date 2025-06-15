@@ -133,7 +133,7 @@ export default function NDCTracker() {
                 dataKey="country"
                 position="insideLeft"
                 offset={8}
-                className="fill-[--color-label]"
+                className="fill-[hsl(var(--foreground))] dark:fill-[hsl(var(--foreground))]"
                 fontSize={12}
               />
               <LabelList
