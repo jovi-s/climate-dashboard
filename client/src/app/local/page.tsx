@@ -80,14 +80,14 @@ export default function Local() {
   }, [selectedCountry]);
 
   return (
-    <section className="p-8 min-h-screen bg-white">
+    <section className="p-8 min-h-screen bg-background">
       <div className="mt-16 max-w-4xl mx-auto">
-        <h1 className="text-3xl text-gray-800 mb-6">
+        <h1 className="text-3xl text-foreground mb-6">
           Localized Climate Action Tracker Summary
         </h1>
         <label
           htmlFor="country-select"
-          className="block mb-2 font-medium text-gray-700"
+          className="block mb-2 font-medium text-muted-foreground"
         >
           Select a country from the dropdown menu below to load its Climate Action Tracker overview
         </label>
@@ -111,13 +111,13 @@ export default function Local() {
           </div>
         )}
 
-        <p className="mt-6 text-gray-700">
+        <p className="mt-6 text-muted-foreground">
           For more information, visit{" "}
           <a
             href={countryURL}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 underline"
+            className="text-primary underline"
           >
             Climate Action Tracker
           </a>
