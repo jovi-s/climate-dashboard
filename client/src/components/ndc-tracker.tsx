@@ -94,20 +94,20 @@ export default function NDCTracker() {
       {/* Bar Chart for NDC Submissions */}
       <Card>
       <p className="mb-4 text-sm">Nationally Determined Contributions (NDCs), are national climate action plans by each country under the Paris Agreement.</p>
-        <CardHeader>
-          <CardTitle>NDC Submissions by SEA Country</CardTitle>
-          <CardDescription>Overview</CardDescription>
-        </CardHeader>
-          <CardContent>
-            <ChartContainer config={barChartConfig}>
-                <BarChart
-                    accessibilityLayer
-                    data={ndcChartData}
-                    layout="vertical"
-                    margin={{
-                    right: 16,
-                    }}
-                >
+      <CardHeader>
+        <CardTitle>NDC Submissions by SEA Country</CardTitle>
+        <CardDescription>Overview</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <ChartContainer config={barChartConfig}>
+          <BarChart
+              accessibilityLayer
+              data={ndcChartData}
+              layout="vertical"
+              margin={{
+              right: 16,
+              }}
+          >
             <CartesianGrid horizontal={false} />
             <YAxis
               dataKey="country"
