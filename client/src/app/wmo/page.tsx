@@ -199,7 +199,9 @@ export default function DocumentsPage() {
                     <IconComponent className="h-8 w-8 text-blue-600" />
                     <Badge variant="secondary">{doc.category}</Badge>
                   </div>
-                  <CardTitle className="text-lg">{doc.title}</CardTitle>
+                  <CardTitle className={`text-lg ${
+                    activeDocument === doc.id ? "text-black" : "text-foreground dark:text-foreground"
+                  }`}>{doc.title}</CardTitle>
                   <CardDescription className="text-sm">{doc.description}</CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -278,19 +280,19 @@ export default function DocumentsPage() {
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="font-medium text-gray-700">Last Updated:</span>
-                <div className="text-gray-600">{documents.find((d) => d.id === activeDocument)?.lastUpdated}</div>
+                <span className="font-medium text-muted-foreground">Last Updated:</span>
+                <div className="text-foreground">{documents.find((d) => d.id === activeDocument)?.lastUpdated}</div>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Reading Time:</span>
-                <div className="text-gray-600">{documents.find((d) => d.id === activeDocument)?.readTime}</div>
+                <span className="font-medium text-muted-foreground">Reading Time:</span>
+                <div className="text-foreground">{documents.find((d) => d.id === activeDocument)?.readTime}</div>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Category:</span>
-                <div className="text-gray-600">{documents.find((d) => d.id === activeDocument)?.category}</div>
+                <span className="font-medium text-muted-foreground">Category:</span>
+                <div className="text-foreground">{documents.find((d) => d.id === activeDocument)?.category}</div>
               </div>
               <div>
-                <span className="font-medium text-gray-700">Original URL:</span>
+                <span className="font-medium text-muted-foreground">Original URL:</span>
                 <div>
                   <a
                   href={documents.find((d) => d.id === activeDocument)?.originalUrl}
@@ -298,7 +300,7 @@ export default function DocumentsPage() {
                   rel="noopener noreferrer"
                   className="text-blue-600 hover:underline"
                   >
-                  View original report
+                    View original report
                   </a>
                 </div>
               </div>
