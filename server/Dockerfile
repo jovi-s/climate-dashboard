@@ -45,4 +45,4 @@ COPY --from=builder /app/ /app/
 EXPOSE 8080
 
 # Run the application
-CMD ["uvicorn", "fastapi_app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["uvicorn", "fastapi_app:app", "--host", "0.0.0.0", "--port", "8081"]
