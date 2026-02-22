@@ -24,7 +24,7 @@ from src.plot_graphs import (
     global_temperature_anomaly,
     plot_co2_data,
     plot_methane_data,
-    plot_world_ocean_warming_1992,
+    plot_world_ocean_warming,
 )
 from src.typing import Request
 from src.utils import fetch_and_extract_href, fetch_global_data
@@ -196,7 +196,7 @@ async def plot_temperature_anomaly():
 @app.get("/plot/ocean-warming")
 async def plot_world_ocean():
     """Endpoint to plot World Ocean Warming data."""
-    ocean_fig = plot_world_ocean_warming_1992(ocean_data)
+    ocean_fig = plot_world_ocean_warming(ocean_data)
     ocean_response = create_image_response(ocean_fig)
     ocean_response["source"] = config["IMAGES_DATA"]["World Ocean Warming (C)"][
         "Data source"

@@ -110,62 +110,62 @@ def global_temperature_anomaly(text):
     return fig
 
 
-# def plot_world_ocean_warming(text):
-#     lines = text.splitlines()
+def plot_world_ocean_warming(text):
+    lines = text.splitlines()
 
-#     # Step 2: Split the remaining lines by whitespace
-#     data = [line.split() for line in lines]
+    # Step 2: Split the remaining lines by whitespace
+    data = [line.split() for line in lines]
 
-#     columns = ["YEAR", "WO", "WOse", "NH", "NHse", "SH", "SHse"]
-#     df = pd.DataFrame(data, columns=columns)
+    columns = ["YEAR", "WO", "WOse", "NH", "NHse", "SH", "SHse"]
+    df = pd.DataFrame(data, columns=columns)
 
-#     # Convert numeric columns to appropriate data types
-#     df = df.apply(pd.to_numeric, errors="coerce")
+    # Convert numeric columns to appropriate data types
+    df = df.apply(pd.to_numeric, errors="coerce")
 
-#     # Drop rows where all elements are NaN (which might happen if the line was empty)
-#     df.dropna(how="all", inplace=True)
-
-#     # Plotting World Ocean Warming
-#     fig, ax = plt.subplots(figsize=(5, 3))
-#     ax.errorbar(
-#         df["YEAR"],
-#         df["WO"],
-#         yerr=df["WOse"],
-#         label="World Ocean (WO)",
-#         fmt="-o",
-#         capsize=5,
-#         color="blue",
-#     )
-#     ax.set_title("World Ocean Warming Over Time")
-#     ax.set_xlabel("Year")
-#     ax.set_ylabel("Temperature Anomaly (°C)")
-#     ax.grid(True)
-#     # plt.legend()
-
-#     return fig
-
-
-def plot_world_ocean_warming_1992(text):
-    data = ast.literal_eval(text)
-    # Convert the dictionary into a DataFrame
-    df = pd.DataFrame(data.items(), columns=["Date", "Temperature"])
-
-    # Convert 'Date' column to datetime format
-    df["Date"] = pd.to_datetime(df["Date"])
+    # Drop rows where all elements are NaN (which might happen if the line was empty)
+    df.dropna(how="all", inplace=True)
 
     # Plotting World Ocean Warming
-    fig, ax = plt.subplots(figsize=(10, 5))
-    ax.plot(
-        df["Date"],
-        df["Temperature"],
-        label="World Ocean Temperature",
-        marker="o",
+    fig, ax = plt.subplots(figsize=(5, 3))
+    ax.errorbar(
+        df["YEAR"],
+        df["WO"],
+        yerr=df["WOse"],
+        label="World Ocean (WO)",
+        fmt="-o",
+        capsize=5,
         color="blue",
     )
     ax.set_title("World Ocean Warming Over Time")
-    ax.set_xlabel("Date")
-    ax.set_ylabel("Ocean Heat Content (Zettajoules)")
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Temperature Anomaly (°C)")
     ax.grid(True)
-    # ax.legend()
+    # plt.legend()
 
     return fig
+
+
+# def plot_world_ocean_warming_1992(text):
+#     data = ast.literal_eval(text)
+#     # Convert the dictionary into a DataFrame
+#     df = pd.DataFrame(data.items(), columns=["Date", "Temperature"])
+
+#     # Convert 'Date' column to datetime format
+#     df["Date"] = pd.to_datetime(df["Date"])
+
+#     # Plotting World Ocean Warming
+#     fig, ax = plt.subplots(figsize=(10, 5))
+#     ax.plot(
+#         df["Date"],
+#         df["Temperature"],
+#         label="World Ocean Temperature",
+#         marker="o",
+#         color="blue",
+#     )
+#     ax.set_title("World Ocean Warming Over Time")
+#     ax.set_xlabel("Date")
+#     ax.set_ylabel("Ocean Heat Content (Zettajoules)")
+#     ax.grid(True)
+#     # ax.legend()
+
+#     return fig
