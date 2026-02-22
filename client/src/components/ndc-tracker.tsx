@@ -55,15 +55,15 @@ type TrackerData = {
 export default function NDCTracker() {
   // Use the TrackerData type directly without fetching from API
   const trackerData: TrackerData = {
+    "Malaysia": { ndc_count: 3, btr_submitted: 1 },
+    "Thailand": { ndc_count: 3, btr_submitted: 1 },  
+    "Cambodia": { ndc_count: 3, btr_submitted: 1 },
+    "Laos": { ndc_count: 3, btr_submitted: 1 },
     "Singapore": { ndc_count: 2, btr_submitted: 1 },
-    "Malaysia": { ndc_count: 1.5, btr_submitted: 1 },
+    "Indonesia": { ndc_count: 2, btr_submitted: 1 },
     "Vietnam": { ndc_count: 1.5, btr_submitted: 0 },
-    "Thailand": { ndc_count: 1.5, btr_submitted: 1 },    
     "Myanmar": { ndc_count: 1.5, btr_submitted: 0 },
-    "Cambodia": { ndc_count: 1.5, btr_submitted: 1 },
-    "Laos": { ndc_count: 1.5, btr_submitted: 0 },
     "Timor-Leste": { ndc_count: 1.5, btr_submitted: 0 },
-    "Indonesia": { ndc_count: 1, btr_submitted: 1 },
     "Philippines": { ndc_count: 1, btr_submitted: 1 },
     "Brunei": { ndc_count: 1, btr_submitted: 1 },
   };

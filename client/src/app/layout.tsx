@@ -40,7 +40,7 @@ export default function RootLayout({
               { title: "Local", href: "/local" },
               { title: "NDCs", href: "/ndc" },
               { title: "BTRs", href: "/btr" },
-              { title: "WMO", href: "/wmo" },
+              { title: "Climate Reports Trends", href: "/trends" },
               { title: "Take Action!", href: "https://www.mnd.gov.sg/docs/default-source/mnd-documents/publications-documents/climate-action-plan---take-action-today.pdf", external: true },
             ]}
           />
