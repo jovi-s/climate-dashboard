@@ -2,6 +2,7 @@ import asyncio
 import base64
 import json
 import logging
+import os
 from asyncio import Lock
 from contextlib import asynccontextmanager
 from io import BytesIO
@@ -13,10 +14,12 @@ import yaml
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
+from pydantic import BaseModel
 
 from src.btr import BTRRAGAgent
 from src.ndc_inference import init_ndc_comparison_agents, load_ndc_data
 from src.news_sentiment import OverallClimateNewsSentimentAnalyzer
+from src.future_projection import generate_climate_future_projection
 from src.plot_graphs import (
     global_temperature_anomaly,
     plot_co2_data,
@@ -224,6 +227,21 @@ async def get_image_links():
     return json_data
 
 
+class ClimateFutureProjectionSummaries(BaseModel):
+    """The three longitudinal report summaries."""
+
+    copernicus: str
+    ipcc: str
+    wmo: str
+
+
+class ClimateFutureProjectionRequest(BaseModel):
+    """Request body for climate future projection."""
+
+    newsReport: str
+    summaries: ClimateFutureProjectionSummaries
+
+
 @app.get("/api/news-sentiment")
 async def get_news_sentiment():
     """Endpoint to retrieve news sentiment data."""
@@ -232,3 +250,35 @@ async def get_news_sentiment():
     )
     report = analyzer.run()
     return {"report": report}
+
+
+@app.post("/api/climate-future-projection")
+async def post_climate_future_projection(body: ClimateFutureProjectionRequest):
+    """Generate a short, evidence-based future projection from news report and summaries."""
+    if not body.newsReport or not body.summaries:
+        raise HTTPException(
+            status_code=400,
+            detail="Missing 'newsReport' or 'summaries' in request body.",
+        )
+    copernicus = (body.summaries.copernicus or "").strip()
+    ipcc = (body.summaries.ipcc or "").strip()
+    wmo = (body.summaries.wmo or "").strip()
+    if not copernicus or not ipcc or not wmo:
+        raise HTTPException(
+            status_code=400,
+            detail="summaries must include non-empty copernicus, ipcc, and wmo.",
+        )
+    try:
+        projection = generate_climate_future_projection(
+            news_report=(body.newsReport or "").strip(),
+            copernicus=copernicus,
+            ipcc=ipcc,
+            wmo=wmo,
+        )
+        return {"projection": projection}
+    except Exception as e:
+        logging.exception("Climate future projection failed: %s", e)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to generate climate future projection.",
+        ) from e

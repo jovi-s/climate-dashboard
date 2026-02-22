@@ -1,12 +1,41 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import ReactMarkdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
-import { Satellite, Scale, Cloud } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Satellite, Scale, Cloud, TrendingUp, AlertTriangle, RefreshCw } from "lucide-react"
+
+const PROJECTION_CACHE_KEY = "climateFutureProjection"
+const PROJECTION_CACHE_TTL_MS = 4 * 60 * 60 * 1000 // 4 hours
+
+function getCachedProjection(): string | null {
+  if (typeof window === "undefined") return null
+  try {
+    const raw = sessionStorage.getItem(PROJECTION_CACHE_KEY)
+    if (!raw) return null
+    const { projection, ts } = JSON.parse(raw) as { projection: string; ts: number }
+    if (Date.now() - ts > PROJECTION_CACHE_TTL_MS) return null
+    return projection
+  } catch {
+    return null
+  }
+}
+
+function setCachedProjection(projection: string): void {
+  if (typeof window === "undefined") return
+  try {
+    sessionStorage.setItem(
+      PROJECTION_CACHE_KEY,
+      JSON.stringify({ projection, ts: Date.now() })
+    )
+  } catch {
+    // ignore
+  }
+}
 
 const reportProducers = [
   {
@@ -46,6 +75,8 @@ async function fetchSummary(assetPath: string): Promise<string> {
   return await res.text()
 }
 
+const apiBase = process.env.NEXT_PUBLIC_PYTHON_BACKEND ?? ""
+
 export default function TrendsPage() {
   const [activeProducer, setActiveProducer] = useState<ProducerId>("wmo")
   const [summaries, setSummaries] = useState<Record<ProducerId, string>>({
@@ -54,6 +85,47 @@ export default function TrendsPage() {
     wmo: "",
   })
   const [loading, setLoading] = useState(true)
+  const [projection, setProjection] = useState<string | null>(null)
+  const [projectionLoading, setProjectionLoading] = useState(false)
+  const [projectionError, setProjectionError] = useState<string | null>(null)
+
+  const fetchProjection = useCallback(async () => {
+    const copernicus = summaries.copernicus?.trim() ?? ""
+    const ipcc = summaries.ipcc?.trim() ?? ""
+    const wmo = summaries.wmo?.trim() ?? ""
+    if (!copernicus || !ipcc || !wmo || !apiBase) return
+
+    setProjectionLoading(true)
+    setProjectionError(null)
+    try {
+      const newsRes = await fetch(`${apiBase}/api/news-sentiment`)
+      if (!newsRes.ok) throw new Error("Failed to fetch news sentiment")
+      const newsData = await newsRes.json()
+      const report = (newsData.report ?? "").trim()
+
+      const projRes = await fetch(`${apiBase}/api/climate-future-projection`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          newsReport: report,
+          summaries: { copernicus, ipcc, wmo },
+        }),
+      })
+      if (!projRes.ok) {
+        const err = await projRes.json().catch(() => ({}))
+        throw new Error((err as { detail?: string }).detail ?? "Failed to generate projection")
+      }
+      const projData = await projRes.json()
+      const text = (projData.projection ?? "").trim()
+      setProjection(text || null)
+      if (text) setCachedProjection(text)
+    } catch (e) {
+      setProjectionError(e instanceof Error ? e.message : "Something went wrong")
+      setProjection(null)
+    } finally {
+      setProjectionLoading(false)
+    }
+  }, [summaries.copernicus, summaries.ipcc, summaries.wmo])
 
   useEffect(() => {
     let mounted = true
@@ -64,7 +136,11 @@ export default function TrendsPage() {
       }),
     ).then((results) => {
       if (!mounted) return
-      const next: Record<ProducerId, string> = { ...summaries }
+      const next: Record<ProducerId, string> = {
+        copernicus: "",
+        ipcc: "",
+        wmo: "",
+      }
       results.forEach(([id, text]) => {
         next[id as ProducerId] = text
       })
@@ -75,6 +151,21 @@ export default function TrendsPage() {
       mounted = false
     }
   }, [])
+
+  useEffect(() => {
+    if (loading) return
+    const copernicus = summaries.copernicus?.trim() ?? ""
+    const ipcc = summaries.ipcc?.trim() ?? ""
+    const wmo = summaries.wmo?.trim() ?? ""
+    if (!copernicus || !ipcc || !wmo || !apiBase) return
+
+    const cached = getCachedProjection()
+    if (cached) {
+      setProjection(cached)
+      return
+    }
+    fetchProjection()
+  }, [loading, summaries.copernicus, summaries.ipcc, summaries.wmo, apiBase, fetchProjection])
 
   const currentProducer = reportProducers.find((p) => p.id === activeProducer)
   const currentSummary = summaries[activeProducer]
@@ -99,6 +190,43 @@ export default function TrendsPage() {
       </section>
 
       <div className="container px-4 md:px-6 mx-auto -mt-16">
+        {/* Future projection */}
+        <Card className="border-none shadow-xl mb-8">
+          <CardHeader className="pb-2">
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+              <CardTitle className="text-2xl">Future projection</CardTitle>
+            </div>
+            <CardDescription>
+              Short, evidence-based outlook from recent climate news and longitudinal report summaries (Copernicus, IPCC, WMO).
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {projectionLoading ? (
+              <div className="space-y-3">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-2/3" />
+              </div>
+            ) : projectionError ? (
+              <div className="flex flex-col items-center justify-center gap-3 py-6 text-muted-foreground">
+                <AlertTriangle className="h-10 w-10 text-amber-500" />
+                <p className="text-sm">{projectionError}</p>
+                <Button variant="outline" size="sm" onClick={fetchProjection} className="gap-2">
+                  <RefreshCw className="h-4 w-4" />
+                  Retry
+                </Button>
+              </div>
+            ) : projection ? (
+              <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-p:leading-relaxed">
+                <ReactMarkdown rehypePlugins={[rehypeRaw]}>{projection}</ReactMarkdown>
+              </div>
+            ) : null}
+          </CardContent>
+        </Card>
+
         {/* Producer selector cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           {reportProducers.map((producer) => {

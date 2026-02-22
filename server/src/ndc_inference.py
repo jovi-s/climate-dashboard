@@ -46,15 +46,15 @@ def load_ndc_data():
     node_parser = SentenceSplitter()
 
     ndc_file_name_path_mapping = {
-        'Cambodia': 'data/ndc/Cambodia/2025- Cambodia-NDC 3.0_0.pdf', 
-        'Myanmar': 'data/ndc/Myanmar/Myanmar Updated  NDC July 2021.pdf', 
-        'Laos': 'data/ndc/Laos/NDC 2020 of Lao PDR (English), 09 April 2021 (1).pdf', 
-        'Singapore': 'data/ndc/Singapore/Singapore_Second_Nationally_Determined_Contribution.pdf',
-        'Brunei': "data/ndc/Brunei/[Final] Brunei Darussalam's Nationally Determined Contribution 3.0 2025.pdf", 
-        'Vietnam': 'data/ndc/Vietnam/Viet Nam NDC 2022 Update.pdf', 
-        'Malaysia': 'data/ndc/Malaysia/Malaysia NDC 3.0 to UNFCCC 2025 final.pdf', 
-        'Indonesia': 'data/ndc/Indonesia/Indonesia_Second NDC_2025.10.24.pdf',
-        'Thailand': 'data/ndc/Thailand/TH NDC 3.0.pdf',
+        "Cambodia": "data/ndc/Cambodia/2025- Cambodia-NDC 3.0_0.pdf",
+        "Myanmar": "data/ndc/Myanmar/Myanmar Updated  NDC July 2021.pdf",
+        "Laos": "data/ndc/Laos/NDC 2020 of Lao PDR (English), 09 April 2021 (1).pdf",
+        "Singapore": "data/ndc/Singapore/Singapore_Second_Nationally_Determined_Contribution.pdf",
+        "Brunei": "data/ndc/Brunei/[Final] Brunei Darussalam's Nationally Determined Contribution 3.0 2025.pdf",
+        "Vietnam": "data/ndc/Vietnam/Viet Nam NDC 2022 Update.pdf",
+        "Malaysia": "data/ndc/Malaysia/Malaysia NDC 3.0 to UNFCCC 2025 final.pdf",
+        "Indonesia": "data/ndc/Indonesia/Indonesia_Second NDC_2025.10.24.pdf",
+        "Thailand": "data/ndc/Thailand/TH NDC 3.0.pdf",
         "Philippines": "data/ndc/Philippines/Philippines - NDC.pdf",
     }
 

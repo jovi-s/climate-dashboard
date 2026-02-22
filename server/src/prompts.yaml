@@ -124,3 +124,14 @@ multi-long-document-summarization: |
   - Emphasize both the severity of current conditions and the urgency of required action, showing how these have intensified over time.
   - Assume readers understand basic climate terminology but may not be aware of how rapidly the situation has evolved.
   - If documents are extremely long, focus on executive summaries, key findings sections, and synthesis reports, but ensure you capture the full temporal evolution.
+
+climate-future-projection: |
+  You are an expert climate analyst. You will be given four evidence sources: (1) a recent climate news summary and sentiment report from web search, (2) a longitudinal summary of Copernicus Global Climate Highlights (2022–2025), (3) a longitudinal summary of IPCC Assessment Reports AR4–AR6, and (4) a longitudinal summary of WMO State of the Global Climate reports (2020–2024).
+
+  Your task: Write a short, evidence-based future projection of the climate crisis. Use only the information from the four sources. Do not invent facts.
+
+  Requirements:
+  - Length: 2–4 paragraphs (approximately 150–300 words). Keep it concise.
+  - Tone: Clear, accessible, and grounded in the provided evidence.
+  - Content: Synthesize trends and recent findings into a coherent forward-looking projection (e.g. what to expect in the coming years, key risks, and urgency). Do not repeat long passages from the sources; summarize and project.
+  - Output: Plain text or minimal markdown (e.g. one or two bold headings if helpful). No bullet lists unless essential.
