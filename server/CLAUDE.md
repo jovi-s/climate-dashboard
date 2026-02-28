@@ -13,7 +13,7 @@ A full-stack climate change dashboard that visualizes climate data and provides 
 ## Tech Stack
 
 **Backend (this directory):**
-- Python 3.12 with Poetry for dependency management
+- Python 3.12 with uv for dependency management
 - FastAPI for REST API
 - LlamaIndex for RAG (Retrieval-Augmented Generation)
 - Matplotlib for data visualization
@@ -38,15 +38,15 @@ make dev-backend      # Run FastAPI with hot reload only
 
 ### Backend-only commands (from `server/` directory)
 ```bash
-make install          # Install dependencies with Poetry
+make install          # Install dependencies with uv
 make lint             # Run ruff linter and formatter on src/
 make fastapi          # Run FastAPI dev server with hot reload
 ```
 
 ### Docker commands
 ```bash
-make local-build      # Build Docker image for linux/amd64
-make local-run        # Run Docker container locally on port 8080
+make server-build     # Build Docker image for linux/amd64
+make server-run       # Run Docker container locally on port 8080
 make gcr              # Build and push to GitHub Container Registry
 ```
 

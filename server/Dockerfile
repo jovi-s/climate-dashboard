@@ -3,26 +3,19 @@ FROM python:3.12 AS builder
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    POETRY_VERSION=2.0.1
+    PYTHONUNBUFFERED=1
 
-# Install system dependencies and Poetry
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl && \
-    curl -sSL https://install.python-poetry.org | python3 - --version $POETRY_VERSION && \
-    ln -s /root/.local/bin/poetry /usr/local/bin/poetry
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set the working directory
 WORKDIR /app
 
 # Copy dependency files
-COPY pyproject.toml poetry.lock* /app/
+COPY pyproject.toml uv.lock /app/
 
-# Configure Poetry to not create a virtual environment
-RUN poetry config virtualenvs.create false
-
-# Install dependencies
-RUN poetry install --no-root --no-interaction --no-ansi --no-cache
+# Install dependencies (no venv, install into system Python)
+RUN uv sync --no-dev --no-install-project --python-preference system
 
 # Copy application code
 COPY . /app

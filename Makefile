@@ -12,7 +12,7 @@ dev-frontend:
 
 dev-backend:
 	@echo "Starting backend development server..."
-	@cd server && poetry run uvicorn fastapi_app:app --reload
+	@cd server && uv run uvicorn fastapi_app:app --reload
 
 # Run frontend and backend concurrently
 dev:
