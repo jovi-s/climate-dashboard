@@ -5,8 +5,9 @@ FROM python:3.12 AS builder
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
 
-# Install uv
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+# Install uv (avoid ghcr.io pull which can hit rate limits / auth errors)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh
+ENV PATH="/root/.local/bin:$PATH"
 
 # Set the working directory
 WORKDIR /app
@@ -35,7 +36,7 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /app/ /app/
 
 # Expose the default port
-EXPOSE 8080
+EXPOSE 8081
 
 # Run the application
 CMD ["uvicorn", "fastapi_app:app", "--host", "0.0.0.0", "--port", "8081"]
