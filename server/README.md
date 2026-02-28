@@ -56,8 +56,7 @@ TO ADD:
 
 ## Deployment
 
-1. Cloud Build - Creates a Docker image and pushes it to Google Container Registry.
-2. Cloud Run - Deploys the Docker image to Google Cloud Run.
+
 
 ### Github Container registry
 
@@ -78,6 +77,9 @@ Builds container from image:
 2. -> build local and push to github!
 
 ### <archived-deployments>
+
+1. Cloud Build - Creates a Docker image and pushes it to Google Container Registry.
+2. Cloud Run - Deploys the Docker image to Google Cloud Run.
 
 #### Render
 
