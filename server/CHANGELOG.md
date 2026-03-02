@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Options are: Added, Changed, Removed, Fixed.
 
+## [0.2.0] - 2026-03-01
+
+- Add IPCC, Copernicus GCH, and WMO Report summaries and projections
+- Upgrade from poetry to uv
+- Fix world ocean warming graph
+- Update NDC, BTR summaries using Gemini 3.1 Pro (more information in README)
+- Update NDC3.0 tracking and respective PDF documents
+
 ## [0.1.5] - 2025-05-11
 
 ### Added
