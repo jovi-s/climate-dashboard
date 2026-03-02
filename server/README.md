@@ -56,8 +56,6 @@ TO ADD:
 
 ## Deployment
 
-
-
 ### Github Container registry
 
 1. 
@@ -76,7 +74,7 @@ Builds container from image:
 1. Using github actions workflows - push to github! 
 2. -> build local and push to github!
 
-### <archived-deployments>
+### archived-deployments
 
 1. Cloud Build - Creates a Docker image and pushes it to Google Container Registry.
 2. Cloud Run - Deploys the Docker image to Google Cloud Run.
@@ -107,9 +105,40 @@ Render:
 Starter	$7/month	512 MB RAM	0.5 CPU
 NEED 1GB RAM!
 
-
 #### Fly.io
 
 1. fly launch --wait-timeout 600
 2. fly apps restart <app name>
 3. fly machine restart <machine id>
+
+### archived-make-commands
+
+```makefile
+app:
+	poetry run streamlit run app.py
+
+gcloud-setup:
+	gcloud auth login
+	gcloud config set project climate-dashboard-docker-image
+
+gcloud-access-token:
+	gcloud auth print-access-token
+
+# Google Cloud Run Deployment - For Streamlit App (Use region 9)
+gcloud-run:
+	gcloud config set run/region asia-southeast1
+	gcloud run deploy --memory 2G --service-min-instances 0 --max-instances 1 --source .
+
+gar-images:
+	gcloud artifacts repositories list
+
+gar-build:
+	docker build --no-cache --platform linux/amd64 -t climate-crisis-app -f Dockerfile .
+	docker images | grep -i "climate-crisis-app"
+
+# Google Artifact Registry API - For Render Deployment (Deploy a Prebuilt Docker Image)
+gar-push:
+	gcloud auth configure-docker us-central1-docker.pkg.dev
+	docker tag climate-crisis-app:latest us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest
+	docker push us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest
+```
