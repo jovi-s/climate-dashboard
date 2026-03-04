@@ -1,26 +1,23 @@
-app:
-	poetry run streamlit run app.py
+.PHONY: help dev-frontend dev-backend dev
 
-install:
-	poetry install
+help:
+	@echo "Available commands:"
+	@echo "  make dev-frontend    - Starts the frontend development server (Next.js)"
+	@echo "  make dev-backend     - Starts the backend development server (Uvicorn with reload)"
+	@echo "  make dev             - Starts both frontend and backend development servers"
 
-lint:
-	poetry run ruff check --fix --unsafe-fixes
-	poetry run ruff format .
+dev-frontend:
+	@echo "Starting frontend development server..."
+	@cd client && npm run dev
 
-fastapi:
-	poetry run uvicorn fastapi_app:app --reload
+dev-backend:
+	@echo "Starting backend development server..."
+	@cd server && uv run uvicorn fastapi_app:app --reload
 
-docker-build:
-	docker build -t climate-crisis-streamlit-app .
+# Run frontend and backend concurrently
+dev:
+	@echo "Starting both frontend and backend development servers..."
+	@make dev-frontend & make dev-backend
 
-docker-run:
-	docker run -p 8080:8080 climate-crisis-streamlit-app
-
-gcloud-setup:
-	gcloud config set project climate-crisis-dashboard
-	gcloud config set run/region asia-southeast1
-
-# Use region 9
-deploy:
-	gcloud run deploy --memory 2G --service-min-instances 0 --max-instances 1 --source .
+dev-build:
+	@cd client && npm run build
