@@ -12,7 +12,7 @@ server-build:
 	docker build --platform=linux/amd64 -t climate-crisis-app .
 
 server-run:
-	docker run --platform=linux/amd64 --rm -p 8080:8080 climate-crisis-app
+	docker run --platform=linux/amd64 --rm -p 8081:8081 climate-crisis-app
 
 save:
 	docker save climate-crisis-app -o climate-crisis-app.tar
