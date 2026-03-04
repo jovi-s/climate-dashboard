@@ -30,10 +30,10 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Copy installed Python packages and application code from builder
-COPY --from=builder /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
-COPY --from=builder /usr/local/bin/ /usr/local/bin/
+# Copy venv and application code from builder (uv installs into .venv, not system)
+COPY --from=builder /app/.venv/ /app/.venv/
 COPY --from=builder /app/ /app/
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Expose the default port
 EXPOSE 8081
