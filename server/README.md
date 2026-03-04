@@ -141,4 +141,9 @@ gar-push:
 	gcloud auth configure-docker us-central1-docker.pkg.dev
 	docker tag climate-crisis-app:latest us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest
 	docker push us-central1-docker.pkg.dev/climate-dashboard-docker-image/prebuilt-docker-images/climate-crisis-app:latest
+
+# Follow instructions in README for Github Container Registry before running
+gcr:
+	docker build --no-cache --platform linux/amd64 . -t ghcr.io/jovi-s/climate-crisis-app:latest              
+	docker push ghcr.io/jovi-s/climate-crisis-app:latest
 ```

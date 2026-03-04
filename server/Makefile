@@ -16,8 +16,3 @@ server-run:
 
 save:
 	docker save climate-crisis-app -o climate-crisis-app.tar
-
-# Follow instructions in README for Github Container Registry before running
-gcr:
-	docker build --no-cache --platform linux/amd64 . -t ghcr.io/jovi-s/climate-crisis-app:latest              
-	docker push ghcr.io/jovi-s/climate-crisis-app:latest
