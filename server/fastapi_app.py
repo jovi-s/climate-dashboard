@@ -2,7 +2,6 @@ import asyncio
 import base64
 import json
 import logging
-import os
 from asyncio import Lock
 from contextlib import asynccontextmanager
 from io import BytesIO
@@ -17,18 +16,24 @@ from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
 from src.btr import BTRRAGAgent
+from src.cache import CacheManager
+from src.future_projection import generate_climate_future_projection
 from src.ndc_inference import init_ndc_comparison_agents, load_ndc_data
 from src.news_sentiment import OverallClimateNewsSentimentAnalyzer
-from src.future_projection import generate_climate_future_projection
 from src.plot_graphs import (
     global_temperature_anomaly,
     plot_co2_data,
     plot_methane_data,
     plot_world_ocean_warming,
 )
+from src.scheduler import (
+    FUTURE_PROJECTION_PREFIX,
+    NEWS_SENTIMENT_CACHE_KEY,
+    run_news_sentiment_job,
+    setup_scheduler,
+)
 from src.typing import Request
 from src.utils import fetch_and_extract_href, fetch_global_data
-
 
 # Configure Matplotlib to use a non-GUI backend
 matplotlib.use("Agg")
@@ -46,13 +51,45 @@ co2_data, methane_data, temp_data, ocean_data = fetch_global_data(config)
 btr_lock = Lock()
 btr_query_engine = None
 
+# Global cache manager (initialised in lifespan)
+cache: CacheManager | None = None
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    global cache
+
     logging.info("Loading NDC data at startup...")
     load_ndc_data()
     logging.info("NDC data loaded successfully.")
+
+    # --- Cache & scheduler setup ---
+    cache = CacheManager()
+
+    if not cache.is_fresh(NEWS_SENTIMENT_CACHE_KEY):
+        logging.info(
+            "News-sentiment cache is stale or missing — running initial job..."
+        )
+        try:
+            await asyncio.get_event_loop().run_in_executor(
+                None, run_news_sentiment_job, cache
+            )
+            logging.info("Initial news-sentiment job completed.")
+        except Exception:
+            logging.exception(
+                "Initial news-sentiment job failed; will retry at midnight UTC."
+            )
+    else:
+        logging.info("News-sentiment cache is fresh — skipping initial job.")
+
+    scheduler = setup_scheduler(cache)
+    scheduler.start()
+    logging.info("APScheduler started (daily news-sentiment refresh at midnight UTC).")
+
     yield
+
+    scheduler.shutdown(wait=False)
+    logging.info("APScheduler shut down.")
 
 
 app = FastAPI(lifespan=lifespan)
@@ -97,7 +134,9 @@ async def get_ndc_comparison(selected_countries: str):
 
     logging.info(f"Comparing NDCs of countries: {countries_list}")
     top_agent = init_ndc_comparison_agents(countries_list)
-    prompt = f"Compare the features of the NDCs of these countries: {tuple(countries_list)}"
+    prompt = (
+        f"Compare the features of the NDCs of these countries: {tuple(countries_list)}"
+    )
     response = top_agent.query(prompt)
     return {"text": str(response)}
 
@@ -142,7 +181,7 @@ async def handle_chat_data(request: Request):
     async def simple_stream():
         chunk_size = 100
         for i in range(0, len(response_text), chunk_size):
-            yield f"0:{json.dumps(response_text[i:i + chunk_size])}\n"
+            yield f"0:{json.dumps(response_text[i : i + chunk_size])}\n"
             await asyncio.sleep(0.01)
 
     response = StreamingResponse(simple_stream(), media_type="text/plain")
@@ -245,10 +284,24 @@ class ClimateFutureProjectionRequest(BaseModel):
 @app.get("/api/news-sentiment")
 async def get_news_sentiment():
     """Endpoint to retrieve news sentiment data."""
+    if cache is not None:
+        report = cache.get(NEWS_SENTIMENT_CACHE_KEY)
+        if report is not None:
+            return {"report": report}
+        # Fallback: try stale cache
+        stale = cache.get_stale(NEWS_SENTIMENT_CACHE_KEY)
+        if stale is not None:
+            logging.warning("Serving stale news-sentiment cache")
+            return {"report": stale}
+
+    # Last resort: compute on-the-fly (should rarely happen)
+    logging.warning("No cache available — running news-sentiment pipeline on-the-fly")
     analyzer = OverallClimateNewsSentimentAnalyzer(
         query="climate change, global warming", max_articles=20
     )
     report = analyzer.run()
+    if cache is not None:
+        cache.set(NEWS_SENTIMENT_CACHE_KEY, report)
     return {"report": report}
 
 
@@ -268,13 +321,27 @@ async def post_climate_future_projection(body: ClimateFutureProjectionRequest):
             status_code=400,
             detail="summaries must include non-empty copernicus, ipcc, and wmo.",
         )
+    news_report = (body.newsReport or "").strip()
+
+    # Check projection cache (keyed by hash of all inputs)
+    if cache is not None:
+        proj_hash = CacheManager.make_hash(news_report, copernicus, ipcc, wmo)
+        proj_key = f"{FUTURE_PROJECTION_PREFIX}{proj_hash}"
+        cached = cache.get(proj_key)
+        if cached is not None:
+            return {"projection": cached}
+    else:
+        proj_key = None
+
     try:
         projection = generate_climate_future_projection(
-            news_report=(body.newsReport or "").strip(),
+            news_report=news_report,
             copernicus=copernicus,
             ipcc=ipcc,
             wmo=wmo,
         )
+        if cache is not None and proj_key is not None:
+            cache.set(proj_key, projection)
         return {"projection": projection}
     except Exception as e:
         logging.exception("Climate future projection failed: %s", e)

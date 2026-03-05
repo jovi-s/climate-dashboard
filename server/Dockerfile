@@ -35,6 +35,9 @@ COPY --from=builder /app/.venv/ /app/.venv/
 COPY --from=builder /app/ /app/
 ENV PATH="/app/.venv/bin:$PATH"
 
+# Ensure the cache directory exists
+RUN mkdir -p data/cache
+
 # Expose the default port
 EXPOSE 8081
 

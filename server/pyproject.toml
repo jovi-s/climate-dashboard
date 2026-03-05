@@ -18,6 +18,7 @@ dependencies = [
     "duckduckgo-search>=7.5.0",
     "sentence-transformers>=3.4.1",
     "torch>=2.6.0",
+    "apscheduler>=3.10,<4",
 ]
 
 # Development dependencies are packages that are needed for development
