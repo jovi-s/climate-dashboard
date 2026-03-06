@@ -1,10 +1,10 @@
-"""APScheduler setup: daily midnight-UTC job for news sentiment caching."""
+"""APScheduler setup: 48-hour job for news sentiment caching."""
 
 import logging
 import time
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
 
 from src.cache import CacheManager
 from src.news_sentiment import OverallClimateNewsSentimentAnalyzer
@@ -47,14 +47,14 @@ def run_news_sentiment_job(cache: CacheManager) -> str:
 
 
 def setup_scheduler(cache: CacheManager) -> AsyncIOScheduler:
-    """Create and return (but do not start) the scheduler with the daily job."""
+    """Create and return (but do not start) the scheduler with the 48-hour job."""
     scheduler = AsyncIOScheduler()
     scheduler.add_job(
         run_news_sentiment_job,
-        trigger=CronTrigger(hour=0, minute=0, timezone="UTC"),
+        trigger=IntervalTrigger(hours=48, timezone="UTC"),
         args=[cache],
         id="daily_news_sentiment",
-        name="Daily news-sentiment refresh",
+        name="48-hour news-sentiment refresh",
         replace_existing=True,
         misfire_grace_time=3600,  # allow up to 1 h late execution
     )
