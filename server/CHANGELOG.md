@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.1] - 2026-03-05
 
-- Create 24H caching system for web search and LLM API responses
+- Create 48H caching system for web search and LLM API responses
 - Rename app.py to streamlit_app.py
 - Move previous Github Container Registry deployment code to README
 
