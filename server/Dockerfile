@@ -30,8 +30,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-# Copy venv and application code from builder (uv installs into .venv, not system)
-COPY --from=builder /app/.venv/ /app/.venv/
+# Single copy: avoid duplicating .venv in a second layer (smaller image, faster export)
 COPY --from=builder /app/ /app/
 ENV PATH="/app/.venv/bin:$PATH"
 

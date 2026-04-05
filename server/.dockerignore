@@ -1,4 +1,6 @@
 __pycache__/
+**/__pycache__/
+*.py[cod]
 .ruff_cache/
 .streamlit/
 .venv/
@@ -14,3 +16,16 @@ Makefile
 README.md
 ruff.toml
 climate-crisis-app.tar
+.DS_Store
+
+# Runtime-only cache (recreated under data/cache at startup)
+data/cache/
+
+# Large local corpora not loaded by fastapi_app / src (offline research & PDFs)
+data/naps/
+data/WEF Reports/
+data/wmo_reports/
+data/copernicus-global-climate-highlights/
+data/ipcc/
+data/gst/
+data/reports/
