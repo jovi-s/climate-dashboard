@@ -29,6 +29,8 @@ from src.plot_graphs import (
 from src.scheduler import (
     FUTURE_PROJECTION_PREFIX,
     NEWS_SENTIMENT_CACHE_KEY,
+    PRECOMPUTED_PROJECTION_KEY,
+    _load_report_summaries,
     run_news_sentiment_job,
     setup_scheduler,
 )
@@ -81,6 +83,19 @@ async def lifespan(app: FastAPI):
             )
     else:
         logging.info("News-sentiment cache is fresh — skipping initial job.")
+        # Pre-compute future projection if it's missing even though news is fresh
+        if not cache.is_fresh(PRECOMPUTED_PROJECTION_KEY):
+            news_report = cache.get(NEWS_SENTIMENT_CACHE_KEY)
+            if news_report:
+                from src.scheduler import _precompute_projection
+
+                logging.info("Pre-computing future projection at startup...")
+                try:
+                    await asyncio.get_event_loop().run_in_executor(
+                        None, _precompute_projection, cache, news_report
+                    )
+                except Exception:
+                    logging.exception("Startup projection pre-compute failed.")
 
     scheduler = setup_scheduler(cache)
     scheduler.start()
@@ -303,6 +318,37 @@ async def get_news_sentiment():
     if cache is not None:
         cache.set(NEWS_SENTIMENT_CACHE_KEY, report)
     return {"report": report}
+
+
+@app.get("/api/report-summaries")
+async def get_report_summaries():
+    """Return the three static longitudinal report summaries (Copernicus, IPCC, WMO)."""
+    try:
+        copernicus, ipcc, wmo = _load_report_summaries()
+        return {"copernicus": copernicus, "ipcc": ipcc, "wmo": wmo}
+    except Exception as e:
+        logging.exception("Failed to load report summaries: %s", e)
+        raise HTTPException(
+            status_code=500,
+            detail="Failed to load report summaries.",
+        ) from e
+
+
+@app.get("/api/climate-future-projection")
+async def get_climate_future_projection():
+    """Return the pre-computed future projection if available."""
+    if cache is not None:
+        projection = cache.get(PRECOMPUTED_PROJECTION_KEY)
+        if projection is not None:
+            return {"projection": projection}
+        stale = cache.get_stale(PRECOMPUTED_PROJECTION_KEY)
+        if stale is not None:
+            logging.warning("Serving stale pre-computed future projection")
+            return {"projection": stale}
+    raise HTTPException(
+        status_code=404,
+        detail="No pre-computed projection available yet.",
+    )
 
 
 @app.post("/api/climate-future-projection")

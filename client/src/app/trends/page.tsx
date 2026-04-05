@@ -43,7 +43,6 @@ const reportProducers = [
     title: "Copernicus Climate Change Service",
     subtitle: "Global Climate Highlights",
     description: "Longitudinal analysis of C3S annual reports (2022–2025): temperature thresholds, ocean heat, Antarctic sea ice, and urgency evolution.",
-    assetPath: "/assets/copernicus-gch/2022-2025_summary.md",
     icon: Satellite,
     badge: "2022–2025",
   },
@@ -52,7 +51,6 @@ const reportProducers = [
     title: "IPCC Assessment Reports",
     subtitle: "AR4, AR5 & AR6 Synthesis",
     description: "Evolution of climate science and policy urgency across the Fourth (2007), Fifth (2014), and Sixth (2023) Assessment Reports.",
-    assetPath: "/assets/ipcc_ar/ar4-6_overall_summary.md",
     icon: Scale,
     badge: "AR4–AR6",
   },
@@ -60,20 +58,13 @@ const reportProducers = [
     id: "wmo",
     title: "WMO State of the Global Climate",
     subtitle: "Annual Reports",
-    description: "Longitudinal analysis of WMO State of the Global Climate reports from 2020 through 2024: severity, thresholds, and impacts.",
-    assetPath: "/assets/wmo_reports_pdf_summary/2020-2024_overall_summary.md",
+    description: "Longitudinal analysis of WMO State of the Global Climate reports from 2020 through 2025: severity, thresholds, and impacts.",
     icon: Cloud,
-    badge: "2020–2024",
+    badge: "2020–2025",
   },
 ] as const
 
 type ProducerId = (typeof reportProducers)[number]["id"]
-
-async function fetchSummary(assetPath: string): Promise<string> {
-  const res = await fetch(assetPath)
-  if (!res.ok) return "Summary not available."
-  return await res.text()
-}
 
 const apiBase = process.env.NEXT_PUBLIC_PYTHON_BACKEND ?? ""
 
@@ -90,14 +81,29 @@ export default function TrendsPage() {
   const [projectionError, setProjectionError] = useState<string | null>(null)
 
   const fetchProjection = useCallback(async () => {
-    const copernicus = summaries.copernicus?.trim() ?? ""
-    const ipcc = summaries.ipcc?.trim() ?? ""
-    const wmo = summaries.wmo?.trim() ?? ""
-    if (!copernicus || !ipcc || !wmo || !apiBase) return
+    if (!apiBase) return
 
     setProjectionLoading(true)
     setProjectionError(null)
     try {
+      // Try the fast pre-computed GET endpoint first
+      const preRes = await fetch(`${apiBase}/api/climate-future-projection`)
+      if (preRes.ok) {
+        const preData = await preRes.json()
+        const text = (preData.projection ?? "").trim()
+        if (text) {
+          setProjection(text)
+          setCachedProjection(text)
+          return
+        }
+      }
+
+      // Fall back to on-demand POST if no pre-computed projection exists
+      const copernicus = summaries.copernicus?.trim() ?? ""
+      const ipcc = summaries.ipcc?.trim() ?? ""
+      const wmo = summaries.wmo?.trim() ?? ""
+      if (!copernicus || !ipcc || !wmo) return
+
       const newsRes = await fetch(`${apiBase}/api/news-sentiment`)
       if (!newsRes.ok) throw new Error("Failed to fetch news sentiment")
       const newsData = await newsRes.json()
@@ -128,44 +134,43 @@ export default function TrendsPage() {
   }, [summaries.copernicus, summaries.ipcc, summaries.wmo])
 
   useEffect(() => {
+    if (!apiBase) return
     let mounted = true
-    Promise.all(
-      reportProducers.map(async (p) => {
-        const text = await fetchSummary(p.assetPath)
-        return [p.id, text] as const
-      }),
-    ).then((results) => {
-      if (!mounted) return
-      const next: Record<ProducerId, string> = {
-        copernicus: "",
-        ipcc: "",
-        wmo: "",
-      }
-      results.forEach(([id, text]) => {
-        next[id as ProducerId] = text
+    fetch(`${apiBase}/api/report-summaries`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to fetch report summaries")
+        return res.json() as Promise<Record<ProducerId, string>>
       })
-      setSummaries(next)
-      setLoading(false)
-    })
+      .then((data) => {
+        if (!mounted) return
+        setSummaries({
+          copernicus: data.copernicus ?? "",
+          ipcc: data.ipcc ?? "",
+          wmo: data.wmo ?? "",
+        })
+        setLoading(false)
+      })
+      .catch(() => {
+        if (!mounted) return
+        setLoading(false)
+      })
     return () => {
       mounted = false
     }
   }, [])
 
   useEffect(() => {
+    if (!apiBase) return
     if (loading) return
-    const copernicus = summaries.copernicus?.trim() ?? ""
-    const ipcc = summaries.ipcc?.trim() ?? ""
-    const wmo = summaries.wmo?.trim() ?? ""
-    if (!copernicus || !ipcc || !wmo || !apiBase) return
 
     const cached = getCachedProjection()
     if (cached) {
       setProjection(cached)
       return
     }
+
     fetchProjection()
-  }, [loading, summaries.copernicus, summaries.ipcc, summaries.wmo, apiBase, fetchProjection])
+  }, [loading, apiBase, fetchProjection])
 
   const currentProducer = reportProducers.find((p) => p.id === activeProducer)
   const currentSummary = summaries[activeProducer]
