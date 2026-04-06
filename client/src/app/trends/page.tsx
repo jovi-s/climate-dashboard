@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react"
 import ReactMarkdown from "react-markdown"
 import rehypeRaw from "rehype-raw"
+import remarkGfm from "remark-gfm"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -226,7 +227,9 @@ export default function TrendsPage() {
               </div>
             ) : projection ? (
               <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24 prose-p:leading-relaxed">
-                <ReactMarkdown rehypePlugins={[rehypeRaw]}>{projection}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                  {projection}
+                </ReactMarkdown>
               </div>
             ) : null}
           </CardContent>
@@ -297,7 +300,7 @@ export default function TrendsPage() {
               </div>
             ) : (
               <div className="prose prose-slate dark:prose-invert max-w-none prose-headings:scroll-mt-24">
-                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                   {currentSummary || "No summary loaded."}
                 </ReactMarkdown>
               </div>
